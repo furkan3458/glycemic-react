@@ -1,0 +1,88 @@
+:root {
+    --app-live-blue: #007bff;
+    --app-gray-900: #212529;
+    --app-grifindor-red: #740001;
+    --app-tax-yellow: #ffbf00;
+}
+
+body {
+    margin: 0;
+    font-family: 'Lato'!important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+}
+
+#root {
+    height: 100%;
+}
+
+#root>footer {
+    position: sticky;
+    top: 100vh;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+p {
+    color: #b3b3b3;
+    font-weight: 300;
+}
+
+a {
+    -webkit-transition: .3s all ease;
+    -o-transition: .3s all ease;
+    transition: .3s all ease;
+    text-decoration: none !important;
+}
+
+a:hover {
+    color: var(--app-live-blue)!important;
+}
+
+.text-app-gray {
+    color: var(--app-gray-900)!important;
+}
+
+.text-app-grifindor {
+    color: var(--app-grifindor-red)!important;
+}
+
+.text-app-live {
+    color: var(--app-live-blue)!important;
+}
+
+.fs-7 {
+    font-size: 0.80rem;
+}
+
+.btn-live-blue {
+    color: #fff!important;
+    background-color: var(--app-live-blue)!important;
+    border-color: var(--app-live-blue)!important;
+    font-size: 2vmax;
+}
+
+.btn-live-blue:hover {
+    color: black!important;
+    background-color: #0d7df5;
+    border-color: #0d7df5;
+}
+
+.ui.container.fluid {
+    width: 100%!important;
+    margin-left: 0!important;
+    margin-right: 0!important;
+}
+
+
+/*Error Page*/
+
+.message-box {
+    color: var(--app-gray-900);
+    font-weight: 500;
+    font-size: 3vmax!important;
+    padding: 0 2vmax;
+}
