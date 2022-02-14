@@ -42,7 +42,7 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
     }, [drawer.isLoading]);
 
     const glycemicRiskColor = (): SemanticCOLORS => {
-        const index = props.detail.glycemicindex!;
+        const index = props.detail.glycemicIndex!;
         const color = (index > 80) ? 'red' : (index > 55 && index <= 80) ? 'orange' : 'green';
 
         return color;
@@ -51,7 +51,7 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
     const checkFoodAdd = () => {
         const temp:DrawerFoods[] = drawer.foods;
 
-        const index = temp.findIndex(value => { return value.detail.gid === props.detail.gid });
+        const index = temp.findIndex(value => { return value.detail.id === props.detail.id });
 
         if (index !== -1 && addCount === temp[index].amount && temp[index].amount === 1)
             toastContext.toastSuccess!("Besin çantanıza eklendi.");
@@ -67,7 +67,7 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
             return;
         }
         const temp: DrawerFoods[] = drawer.foods;
-        const index = temp.findIndex(item => { return item.detail.gid === props.detail.gid });
+        const index = temp.findIndex(item => { return item.detail.id === props.detail.id });
 
         if (index === -1) {
             const item: DrawerFoods = {
@@ -102,10 +102,10 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
             <CldImageComponent width={250} height={250} src={props.detail.image!} wrapped={true} />
             <Card.Content>
                 <Card.Header>{props.detail.name}</Card.Header>
-                <Card.Meta>{props.detail.createdDate}</Card.Meta>
+                <Card.Meta>{new Date(props.detail.createdDate).toLocaleDateString()}</Card.Meta>
                 <Card.Description>Glisemik Oranı:
                     <Label circular color={glycemicRiskColor()}>
-                        {props.detail.glycemicindex}
+                        {props.detail.glycemicIndex}
                     </Label>
                 </Card.Description>
                 <Card.Description><p>

@@ -8,7 +8,7 @@ export interface categoryState {
     isLoading:boolean;
     isInitialize:boolean;
     categories:ResultCategory[];
-    single:ResultCategory;
+    single:ResultCategory | {};
     pages:IPageInfo;
 }
 

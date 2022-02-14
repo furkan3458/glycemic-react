@@ -1,26 +1,28 @@
 import {ResultCategory} from './ICategory';
+import {ResultNutritional} from './INutritional';
 
 export interface IFoods {
-    status?:  boolean;
-    message?: string;
+    status:  boolean;
+    message: string;
     result?:  ResultFoods[];
-    total?:   number;
-    totalPage?: number;
-    page?: number;
+    total:   number;
+    totalPage: number;
+    page: number;
 }
 
 export interface ResultFoods {
-    createdDate?:   number;
-    modifiedDate?:  number;
-    createdBy?:     string;
-    modifiedBy?:    string;
-    gid?:           number;
-    cid?:           number;
-    name?:          string;
-    glycemicindex?: number;
-    image?:         string;
-    source?:        string;
-    url?:           string;
-    enabled?:       boolean;
+    id:            number;
+    name:          string;
+    glycemicIndex: number;
+    image:         string;
+    source:        string;
+    url:           string;
+    enabled:       boolean;
     category?:      ResultCategory;
+    foodNutritional?: ResultNutritional[];
+    createdDate:   number;
+    modifiedDate:  number;
+    createdBy:     string;
+    modifiedBy:    string;
+    foodStatus:     string;
 }

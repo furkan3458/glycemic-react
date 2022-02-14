@@ -19,7 +19,7 @@ export const setCategoryInitialize = (state:boolean) => (dispatch:Dispatch<Actio
 
 export const getCategoryList = () => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.CATEGORY_LOADING, payload:true});
-    axios.get("categories/all").then(response=> {
+    axios.get("category/list").then(response=> {
         const data:ICategory = response.data;
 
         if(data.status){
@@ -37,7 +37,7 @@ export const getCategoryList = () => (dispatch:Dispatch<Action>) => {
 
 export const getCategoryByUrl = (url:string) => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.CATEGORY_LOADING, payload:true});
-    axios.get("categories/find",{
+    axios.get("category/find",{
         params:{
             name:url
         }
@@ -65,13 +65,12 @@ export const getCategoryByUrl = (url:string) => (dispatch:Dispatch<Action>) => {
 
 export const getCategoryById = (id:number) => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.CATEGORY_LOADING, payload:true});
-    axios.get("categories/find",{
+    axios.get("category/find",{
         params:{
             id:id
         }
     }).then(response=> {
         const data:ICategory = response.data;
-
         if(data.status)
             dispatch({type:ActionTypes.CATEGORY_SINGLE, payload:data.result![0]});
         else{

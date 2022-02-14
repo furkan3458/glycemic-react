@@ -17,7 +17,7 @@ export const setFoodLoading = (state: boolean) => (dispatch: Dispatch<Action>) =
 export const getFoodList = () => (dispatch: Dispatch<Action>) => {
     dispatch({ type: ActionTypes.FOOD_LOADING, payload: true });
 
-    axios.get("foods/list").then(response => {
+    axios.get("food/list").then(response => {
         const data: IFoods = response.data;
         if (data.status) {
             dispatch({ type: ActionTypes.FOOD_SET, payload: data.result });
@@ -40,7 +40,7 @@ export const getFoodList = () => (dispatch: Dispatch<Action>) => {
 export const getFood = (name: string) => (dispatch: Dispatch<Action>) => {
     dispatch({ type: ActionTypes.FOOD_LOADING, payload: true });
 
-    axios.get("foods/foodGet", {
+    axios.get("food/get", {
         params: {
             name: name
         }

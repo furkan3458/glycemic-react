@@ -8,7 +8,6 @@ import {DrawerFoods} from '../reducers/drawerReducer';
 
 const axios = Axios.create({
     baseURL:process.env.REACT_APP_BASE_URL,
-    headers: {"Access-Control-Allow-Origin": "*"}
 });
 
 export const setDrawerLoading = (state:boolean) => (dispatch:Dispatch<Action>) => {
@@ -39,7 +38,7 @@ export const setDrawerAdd = (item:DrawerFoods) =>(dispatch:Dispatch<Action>) => 
     dispatch({type:ActionTypes.DRAWER_LOADING, payload:true});
 
     axios.post("foods/checkFood",{},{
-        params:{gid:item.detail.gid}
+        params:{gid:item.detail.id}
     }).then(response=> {
         const data = response.data;
         if(data.status)
@@ -55,7 +54,7 @@ export const setDrawerAdd = (item:DrawerFoods) =>(dispatch:Dispatch<Action>) => 
 export const setDrawerUpdate = (item:DrawerFoods, index:number) =>(dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.DRAWER_LOADING, payload:true});
     axios.post("foods/checkFood",{},{
-        params:{gid:item.detail.gid}
+        params:{gid:item.detail.id}
     }).then(response=> {
         const data = response.data;
         if(data.status)
@@ -70,7 +69,7 @@ export const setDrawerUpdate = (item:DrawerFoods, index:number) =>(dispatch:Disp
 export const setShoppingCartRemove = (item:DrawerFoods, index:number) =>(dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.DRAWER_LOADING, payload:true});
     axios.post("foods/checkFood",{},{
-        params:{gid:item.detail.gid}
+        params:{gid:item.detail.id}
     }).then(response=> {
         const data = response.data;
         if(data.status)

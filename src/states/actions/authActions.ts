@@ -32,18 +32,18 @@ export const setDefaultValidateEmail = () => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.AUTH_VALIDATE_EMAIL, payload:{isValidating:false, validateState:ValidityStates.IDLE}});
 }
 
-export const loadUser = (user:any) => (dispatch:Dispatch<Action>) => {
+export const authLogin = (user:any) => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
-    axios.post("api/auth/signin",user).then(response => {
+    axios.post("auth/login",user).then(response => {
         const data = response.data;
         dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
         
-        if(data.error === undefined || data.error === null){
+        if(data.status !== undefined && data.status){
 
             localStorage.setItem("remember-me",user.rememberMe);
-            localStorage.setItem("session",btoa(unescape(encodeURIComponent(JSON.stringify(data)))) );
+            localStorage.setItem("session",btoa(unescape(encodeURIComponent(JSON.stringify(data.result)))));
             
-            dispatch({type:ActionTypes.AUTH_SET_USER, payload:user});
+            dispatch({type:ActionTypes.AUTH_SET_USER, payload:data.result});
         }
         else{
             dispatch({type:ActionTypes.AUTH_FAIL, payload:true});
@@ -63,11 +63,11 @@ export const validateUser = () => (dispatch:Dispatch<Action>) => {
 
     if(user){
         const validate:any = {
-            username:user.username,
+            email:user.email,
             token:user.token,
         }
 
-        axios.post("api/auth/validate",validate).then(response=>{
+        axios.post("auth/validate",validate).then(response=>{
             const data = response.data;
             if(data.result){
                 dispatch({type:ActionTypes.AUTH_VALIDATE, payload:user});
@@ -89,9 +89,8 @@ export const validateUser = () => (dispatch:Dispatch<Action>) => {
 
 export const signupAuthAction = (form:any) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
-    axios.post("register/registerUser",form).then(response => {
+    axios.post("auth/signup",form).then(response => {
         const data:any = response.data;
-        console.log(data);
         dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
         
         if(data.status){

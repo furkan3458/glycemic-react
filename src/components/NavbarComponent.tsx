@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
-import { Menu, Container, Grid, Dropdown, Icon, Image, Button, Modal, Form, Divider, Header } from 'semantic-ui-react'
+import { Menu, Container, Grid, Dropdown, Icon, Image, Button, Modal, Form, Divider, Header, List } from 'semantic-ui-react'
 
 import { StateType } from '../states/reducers';
 
@@ -10,12 +10,16 @@ import { StateType } from '../states/reducers';
 import AuthContext, { AuthContextProvider } from '../contexts/AuthContext';
 import { ResultCategory } from '../models/ICategory';
 
+import LoginModalComponent from './LoginModalComponent';
+import SignupModalComponent from './SignupModalComponent';
+
 const NavbarComponent = ({ ...props }: any) => {
 
     const navigate = useNavigate();
 
     const [activeItem, setActiveItem] = useState("");
-    const [showModal, setShowModal] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showSignupModal, setshowSignupModal] = useState(false);
 
     const authContext = useContext<AuthContextProvider>(AuthContext);
 
@@ -26,51 +30,30 @@ const NavbarComponent = ({ ...props }: any) => {
         navigate(path);
     }
 
-    const openModal = () => {
-        setShowModal(true);
+    const openLoginModal = () => {
+        setShowLoginModal(true);
+        setshowSignupModal(false);
+    }
+
+    const openSignupModal = () => {
+        setShowLoginModal(false);
+        setshowSignupModal(true);
     }
 
     const onCloseModal = () => {
-        setShowModal(false);
+        setShowLoginModal(false);
+        setshowSignupModal(false);
     }
 
     return (
         <>
-            <Modal
-                dimmer={'blurring'}
-                open={showModal}
-                onClose={() => onCloseModal()}
-            >
-                <Modal.Content>
-                    <Grid columns={2} stackable centered>
-                        <Grid.Column width={8}>
-                            <Form>
-                                <Form.Input
-                                    icon='at'
-                                    iconPosition='left'
-                                    label='Email'
-                                    placeholder='Email'
-                                />
-                                <Form.Input
-                                    icon='lock'
-                                    iconPosition='left'
-                                    label='Şifre'
-                                    type='password'
-                                    placeholder='Şifre'
-                                />
-                                <Button content='Giriş' primary />
-                            </Form>
-                            <Divider></Divider>
-                            <div>Şifreni mi unuttun? Buraya tıkla!</div>
-                        </Grid.Column >
-                        <Grid.Column verticalAlign='middle' width={8}>
-                            <Header as='h3'>Henüz kayıt olmadın mı?</Header>
-                            <Button content='Kayıt ol' icon='signup' size='big' />
-                        </Grid.Column>
-                    </Grid>
-                    <Divider vertical>Or</Divider>
-                </Modal.Content>
-            </Modal>
+            {
+                authContext.authType === "guest" ? 
+                <>
+                    <LoginModalComponent showModal={showLoginModal} onClose={()=> onCloseModal()} onSignupClick={() => openSignupModal()}/>
+                    <SignupModalComponent showModal={showSignupModal} onClose={()=> onCloseModal()} onLoginClick={() => openLoginModal()}/>
+                </> : <></>
+            }
             <Menu borderless={true} size='massive' inverted fluid>
                 <Grid container className="fluid">
                     <Grid.Row only='computer'>
@@ -93,20 +76,22 @@ const NavbarComponent = ({ ...props }: any) => {
                             authContext.authType === "guest" ?
                                 <>
                                     <Menu.Item name='login' active={activeItem === 'login'} position="right">
-                                        <Button primary onClick={() => openModal()}>Giriş</Button>
+                                        <Button primary onClick={() => openLoginModal()}>Giriş</Button>
                                     </Menu.Item>
                                     <Menu.Item name='signup' active={activeItem === 'signup'}>
-                                        <Button primary onClick={() => openModal()}>Üye ol</Button>
+                                        <Button primary onClick={() => openSignupModal()}>Üye ol</Button>
                                     </Menu.Item>
                                 </> :
                                 <>
-                                    <Dropdown item text={authContext.authenticatedUser.fullname} position="right">
+                                <Menu.Item position='right'>
+                                    <Dropdown item simple text={authContext.authenticatedUser.fullname}>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item><Link to="/insert">Index ekle</Link></Dropdown.Item>
-                                            <Dropdown.Item><Link to="/settings">Ayarlar</Link></Dropdown.Item>
-                                            <Dropdown.Item><Link to="/logout">Çıkış Yap</Link></Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleNavigateClick("insert", "/insert")}>Index ekle</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleNavigateClick("popular", "/settings")}>Ayarlar</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleNavigateClick("popular", "/logout")}>Çıkış Yap</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
+                                </Menu.Item>
                                 </>
                         }
                     </Grid.Row>
@@ -117,10 +102,10 @@ const NavbarComponent = ({ ...props }: any) => {
                         {
                             authContext.authType === "guest" ?
                                 <>
-                                    <Menu.Item name='login' active={activeItem === 'login'} position="right" onClick={() => openModal()}>
+                                    <Menu.Item name='login' active={activeItem === 'login'} position="right" onClick={() => openLoginModal()}>
                                         <Icon name='user' />
                                     </Menu.Item>
-                                    <Menu.Item name='signup' active={activeItem === 'signup'} onClick={() => openModal()}>
+                                    <Menu.Item name='signup' active={activeItem === 'signup'} onClick={() => openSignupModal()}>
                                         <Icon name='user plus' />
                                     </Menu.Item>
                                 </> :
