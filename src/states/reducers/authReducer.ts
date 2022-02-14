@@ -17,7 +17,6 @@ export interface authState {
     isLoading?: boolean;
     isAuthFail?: boolean;
     isValidate?: boolean;
-    usernameValidity?: authValidity;
     emailValidity?: authValidity;
     user?: object | null;
 }
@@ -27,10 +26,6 @@ const initialize: authState = {
     isAuthFail: false, 
     isLoading: false, 
     isValidate: false, 
-    usernameValidity: {
-        isValidating: false,
-        validateState: ValidityStates.IDLE
-    },
     emailValidity: {
         isValidating: false,
         validateState: ValidityStates.IDLE
@@ -50,12 +45,12 @@ const authReducer = (state: authState = initialize, action: action) => {
                 ...state,
                 isAuthenticated: action.payload
             }
-        case ActionTypes.AUTH_SET_USER:
+        case ActionTypes.AUTH_RESET:
             return {
                 ...state,
-                user: action.payload,
                 isAuthFail: false,
-                isAuthenticated: true,
+                isAuthenticated: false,
+                isValidate:false,
             }
         case ActionTypes.AUTH_FAIL:
             return {
@@ -66,12 +61,7 @@ const authReducer = (state: authState = initialize, action: action) => {
             return {
                 ...state,
                 user: action.payload,
-                isValidate: true
-            }
-        case ActionTypes.AUTH_VALIDATE_USERNAME:
-            return {
-                ...state,
-                usernameValidity: action.payload,
+                isValidate: true,
             }
         case ActionTypes.AUTH_VALIDATE_EMAIL:
             return {
@@ -81,7 +71,7 @@ const authReducer = (state: authState = initialize, action: action) => {
         case ActionTypes.AUTH_LOGOUT:
             return {
                 ...state,
-                isValidate: action.payload
+                isValidate: action.payload,
             }
         default:
             return state;

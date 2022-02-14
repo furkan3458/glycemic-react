@@ -5,7 +5,7 @@ import { Menu, Container, Grid, Dropdown, Icon, Image, Button, Modal, Form, Divi
 
 import { StateType } from '../states/reducers';
 
-//import { logoutAction } from '../states/actions/authActions';
+import { authLogout } from '../states/actions/authActions';
 
 import AuthContext, { AuthContextProvider } from '../contexts/AuthContext';
 import { ResultCategory } from '../models/ICategory';
@@ -13,7 +13,11 @@ import { ResultCategory } from '../models/ICategory';
 import LoginModalComponent from './LoginModalComponent';
 import SignupModalComponent from './SignupModalComponent';
 
-const NavbarComponent = ({ ...props }: any) => {
+interface NavbarProps{
+    authLogout?:Function;
+}
+
+const NavbarComponent = ({ ...props }:NavbarProps) => {
 
     const navigate = useNavigate();
 
@@ -43,6 +47,11 @@ const NavbarComponent = ({ ...props }: any) => {
     const onCloseModal = () => {
         setShowLoginModal(false);
         setshowSignupModal(false);
+    }
+
+    const onLogout = () => {
+        const token = localStorage.getItem("token");
+        props.authLogout!({token:token});
     }
 
     return (
@@ -88,7 +97,7 @@ const NavbarComponent = ({ ...props }: any) => {
                                         <Dropdown.Menu>
                                             <Dropdown.Item onClick={() => handleNavigateClick("insert", "/insert")}>Index ekle</Dropdown.Item>
                                             <Dropdown.Item onClick={() => handleNavigateClick("popular", "/settings")}>Ayarlar</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleNavigateClick("popular", "/logout")}>Çıkış Yap</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => onLogout()}>Çıkış Yap</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </Menu.Item>
@@ -143,6 +152,6 @@ const NavbarComponent = ({ ...props }: any) => {
 
 const mapStateToProps = (state: any) => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {authLogout};
 
-export default /*connect(mapStateToProps, mapDispatchToProps)*/(NavbarComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(NavbarComponent);

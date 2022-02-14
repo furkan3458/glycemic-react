@@ -60,9 +60,8 @@ export const Signup = ({ ...props }: any) => {
         if(usernameInput.current === null || emailInput.current === null)
             return;
 
-        handleUsernameValidity();
         handleEmailValidity();
-    }, [auth.usernameValidity, auth.emailValidity])
+    }, [, auth.emailValidity])
 
     const onTogglePasswordClick = () => {
         if (passwordSpan.current === null)
@@ -115,34 +114,6 @@ export const Signup = ({ ...props }: any) => {
 
         console.log("Submit", username, password, email, fullname);
         props.signupAuthAction({ username: username, password: password, email: email, fullname: fullname });
-    }
-
-    const onChangeUsername = async (value: string) => {
-        if (usernameInput.current === null)
-            return;
-
-        let $this = $(usernameInput.current);
-
-        const userNameRegex = new RegExp("^[a-zA-Z0-9.!@_]{6,30}$");
-        let usernameValid = userNameRegex.test(value);
-
-        if (value === "") {
-            $this.removeClass("invalid");
-            $this.removeClass("valid");
-            props.setDefaultValidateUsername();
-        }
-        else if (!usernameValid) {
-            $this.addClass("invalid");
-            $this.removeClass("valid");
-        }
-        else if (usernameValid && !auth.usernameValidity.isValidating) {
-            $this.removeClass("invalid");
-            $this.removeClass("valid");
-            setTimeout(() => { checkUsername(value) }, 1 * 500);
-        }
-
-        setusername(value);
-        setusernameValid(usernameValid);
     }
 
     const onChangePassword = (value: string) => {
@@ -237,27 +208,6 @@ export const Signup = ({ ...props }: any) => {
     const toastCallback: Function = () => {
         if (toastShow)
             settoastShow(false);
-    }
-
-    const handleUsernameValidity = () =>{
-        let $this = $(usernameInput.current!);
-        switch(auth.usernameValidity.validateState){
-            case ValidityStates.IDLE:
-                $this.removeClass("invalid");
-                $this.removeClass("valid");
-                setusernameValid(false);
-                break;
-            case ValidityStates.VALID:
-                $this.removeClass("invalid");
-                $this.addClass("valid");
-                setusernameValid(true);
-                break;
-            case ValidityStates.INVALID:
-                $this.addClass("invalid");
-                $this.removeClass("valid");
-                setusernameValid(false);
-                break;
-        }
     }
 
     const handleEmailValidity = () =>{

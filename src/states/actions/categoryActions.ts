@@ -30,7 +30,7 @@ export const getCategoryList = () => (dispatch:Dispatch<Action>) => {
 
         dispatch({type:ActionTypes.CATEGORY_INITIALIZE, payload:true});
     }).catch(error => {
-        console.log(error.response);
+        console.log(error);
         dispatch({type:ActionTypes.CATEGORY_LOADING, payload:false});
     });
 }

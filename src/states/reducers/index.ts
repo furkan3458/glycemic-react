@@ -6,6 +6,7 @@ import foodReducer, { foodState } from './foodReducer';
 import drawerReducer, { drawerState } from './drawerReducer';
 import categoryReducer, { categoryState } from './categoryReducer';
 import searchReducer, { searchState } from './searchReducer';
+import cityReducer, { cityState } from './cityReducer';
 
 const reducers = combineReducers({
     auth:authReducer,
@@ -13,6 +14,7 @@ const reducers = combineReducers({
     drawer:drawerReducer,
     category:categoryReducer,
     search:searchReducer,
+    city:cityReducer,
 });
 
 interface RootState{
@@ -21,6 +23,7 @@ interface RootState{
     drawer:drawerState;
     category:categoryState;
     search:searchState;
+    city:cityState;
 }
 
 export default reducers;

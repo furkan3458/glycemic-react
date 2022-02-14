@@ -20,12 +20,8 @@ export const setAuthFail = (state:boolean) => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.AUTH_FAIL, payload:state});
 }
 
-export const setUser = (user:any) => (dispatch:Dispatch<Action>) => {
-    dispatch({type:ActionTypes.AUTH_SET_USER, payload:user});
-}
-
-export const setDefaultValidateUsername = () => (dispatch:Dispatch<Action>) => {
-    dispatch({type:ActionTypes.AUTH_VALIDATE_USERNAME, payload:{isValidating:false, validateState:ValidityStates.IDLE}});
+export const setAuthReset = () => (dispatch:Dispatch<Action>) => {
+    dispatch({type:ActionTypes.AUTH_RESET, payload:null});
 }
 
 export const setDefaultValidateEmail = () => (dispatch:Dispatch<Action>) => {
@@ -41,9 +37,11 @@ export const authLogin = (user:any) => (dispatch:Dispatch<Action>) => {
         if(data.status !== undefined && data.status){
 
             localStorage.setItem("remember-me",user.rememberMe);
+            localStorage.setItem("token",data.result.token);
             localStorage.setItem("session",btoa(unescape(encodeURIComponent(JSON.stringify(data.result)))));
             
-            dispatch({type:ActionTypes.AUTH_SET_USER, payload:data.result});
+            dispatch({type:ActionTypes.AUTH_AUTHENTICATION, payload:true});
+            dispatch({type:ActionTypes.AUTH_RESET, payload:true});
         }
         else{
             dispatch({type:ActionTypes.AUTH_FAIL, payload:true});
@@ -87,7 +85,7 @@ export const validateUser = () => (dispatch:Dispatch<Action>) => {
     }
 }
 
-export const signupAuthAction = (form:any) => (dispatch:Dispatch<Action>) =>{
+export const authSignup = (form:any) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
     axios.post("auth/signup",form).then(response => {
         const data:any = response.data;
@@ -96,9 +94,11 @@ export const signupAuthAction = (form:any) => (dispatch:Dispatch<Action>) =>{
         if(data.status){
 
             localStorage.setItem("remember-me",data.rememberMe);
-            localStorage.setItem("session",btoa(unescape(encodeURIComponent(JSON.stringify(data)))) );
+            localStorage.setItem("token",data.result.token);
+            localStorage.setItem("session",btoa(unescape(encodeURIComponent(JSON.stringify(data.result)))));
             
-            dispatch({type:ActionTypes.AUTH_SET_USER, payload:data});
+            dispatch({type:ActionTypes.AUTH_AUTHENTICATION, payload:true});
+            dispatch({type:ActionTypes.AUTH_RESET, payload:true});
         }
         else{
             dispatch({type:ActionTypes.AUTH_FAIL, payload:true});
@@ -111,38 +111,25 @@ export const signupAuthAction = (form:any) => (dispatch:Dispatch<Action>) =>{
     });
 }
 
-export const logoutAction = (user:any) => (dispatch:Dispatch<Action>) =>{
+export const authLogout = (form:any) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_LOGOUT, payload:false});
-    axios.post("/api/auth/logout",user).then(response=>{
-        dispatch({type:ActionTypes.AUTH_LOGOUT, payload:true});
+    axios.post("auth/logout",form,{
+        headers:{
+            Authorization:"Bearer "+form.token
+        }
+    }).then(response=>{
         clearStorage();
         window.location.href="/";
     }).catch(error=>{
-        console.log(error.response);
-        dispatch({type:ActionTypes.AUTH_LOGOUT, payload:true});
         clearStorage();
         window.location.href="/";
+        
     });
 }
 
-export const validateUsernameAuthAction = (username:string) => (dispatch:Dispatch<Action>) =>{
-    dispatch({type:ActionTypes.AUTH_VALIDATE_USERNAME, payload:{isValidating:true, validateState:ValidityStates.IDLE}});
-    axios.post("/api/auth/validate_username",{username:username}).then(response=>{
-        const data = response.data;
-        if(data.result)
-            dispatch({type:ActionTypes.AUTH_VALIDATE_USERNAME, payload:{isValidating:false,validateState:ValidityStates.VALID}});
-        else
-        dispatch({type:ActionTypes.AUTH_VALIDATE_USERNAME, payload:{isValidating:false,validateState:ValidityStates.INVALID}});
-
-    }).catch(error=>{
-        console.log(error.response);
-        dispatch({type:ActionTypes.AUTH_VALIDATE_USERNAME, payload:{isValidating:false,validateState:ValidityStates.IDLE}});
-    });
-}
-
-export const validateEmailAuthAction = (email:string) => (dispatch:Dispatch<Action>) =>{
+export const validateEmail = (email:string) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_VALIDATE_EMAIL, payload:{isValidating:true, validateState:ValidityStates.IDLE}});
-    axios.post("/api/auth/validate_email",{email:email}).then(response=>{
+    axios.post("auth/validate_email",{email:email}).then(response=>{
         const data = response.data;
         if(data.result)
             dispatch({type:ActionTypes.AUTH_VALIDATE_EMAIL, payload:{isValidating:false,validateState:ValidityStates.VALID}});
