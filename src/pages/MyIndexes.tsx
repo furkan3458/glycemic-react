@@ -63,7 +63,7 @@ const MyIndexes = ({ ...props }: MyIndexesProps) => {
       <Helmet>
         <meta charSet="utf-8" />
         <title>
-          Glycemic Indexer - İndekslerim.
+          Glycemic Indexer - Eklediklerim
         </title>
       </Helmet>
       <NavbarComponent />
