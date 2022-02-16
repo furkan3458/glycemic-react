@@ -37,13 +37,47 @@ export const getFoodList = () => (dispatch: Dispatch<Action>) => {
     });
 }
 
-export const getFood = (name: string) => (dispatch: Dispatch<Action>) => {
+export const getUserFoodList = () => (dispatch: Dispatch<Action>) => {
     dispatch({ type: ActionTypes.FOOD_LOADING, payload: true });
 
-    axios.get("food/get", {
-        params: {
-            name: name
+    axios.get("food/list/user",{
+        headers:{
+            Authorization:"Bearer "+localStorage.getItem('token')
         }
+    }).then(response => {
+        const data: IFoods = response.data;
+        if (data.status) {
+            dispatch({ type: ActionTypes.FOOD_SET, payload: data.result });
+            dispatch({
+                type: ActionTypes.FOOD_SET_PAGEABLE,
+                payload: {
+                    total: data.total,
+                    totalPage: data.totalPage,
+                    page: data.page,
+                }
+            });
+        }
+        dispatch({ type: ActionTypes.FOOD_LOADING, payload: false });
+    }).catch(error => {
+        dispatch({ type: ActionTypes.FOOD_LOADING, payload: false });
+        console.log(error.response);
+    });
+}
+
+export const getFood = (name: string, status:string) => (dispatch: Dispatch<Action>) => {
+    dispatch({ type: ActionTypes.FOOD_LOADING, payload: true });
+    let parameters:any = {
+        name: name
+    };
+    let headers:any = {};
+    if(status !== "" && localStorage.getItem('token')){
+        parameters['status'] = status;
+        headers['Authorization'] = "Bearer "+localStorage.getItem('token');
+    }
+
+    axios.get("food/get", {
+        params: parameters,
+        headers: headers
     }).then(response => {
         const data: IFoods = response.data;
         if (data.status) {
@@ -53,6 +87,7 @@ export const getFood = (name: string) => (dispatch: Dispatch<Action>) => {
         }
         dispatch({ type: ActionTypes.FOOD_LOADING, payload: false });
     }).catch(error => {
+        dispatch({ type: ActionTypes.FOOD_SET, payload: [] });
         dispatch({ type: ActionTypes.FOOD_LOADING, payload: false });
         console.log(error.response);
     });

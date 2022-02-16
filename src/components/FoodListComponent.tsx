@@ -15,6 +15,7 @@ interface FoodListProps {
     foods: ResultFoods[],
     category: ResultCategory[];
     specialCategory?: boolean;
+    isUserIndexes?:boolean;
 }
 
 const FoodListComponent = ({ ...props }: FoodListProps) => {
@@ -51,7 +52,7 @@ const FoodListComponent = ({ ...props }: FoodListProps) => {
                     </Dimmer>
                     {foods.length ?
                         <Card.Group centered>
-                            {foods.map((item, index) => <FoodListCellComponent key={index} detail={item} />)}
+                            {foods.map((item, index) => <FoodListCellComponent key={index} detail={item} isUserIndexes={props.isUserIndexes!}/>)}
                         </Card.Group>
                         :
                         <Card.Group centered><Header as="h3" style={{padding:20}}>Ürün bulunamadı.</Header></Card.Group>

@@ -6,7 +6,7 @@ import { Container, Grid, Header, Icon, Segment } from 'semantic-ui-react';
 
 import { StateType } from '../states/reducers';
 
-import { setSearchResulted } from '../states/actions/searchActions';
+import { setSearchResulted,setSearchClear,setSearchDB } from '../states/actions/searchActions';
 import { getCategoryByUrl } from '../states/actions/categoryActions';
 
 import NavbarComponent from '../components/NavbarComponent';
@@ -22,6 +22,8 @@ import isEmpty from '../utils/isEmpty';
 interface CategoryProps {
   getCategoryByUrl?: Function;
   setSearchResulted?: Function;
+  setSearchClear?: Function;
+  setSearchDB?: Function;
 }
 
 const Category = ({ ...props }: CategoryProps) => {
@@ -41,6 +43,7 @@ const Category = ({ ...props }: CategoryProps) => {
   useEffect(() => {
     setPageState(States.INIT);
     props.setSearchResulted!(false);
+    props.setSearchClear!();
     fetchCategoryAndFoods();
   }, [name]);
 
@@ -53,6 +56,7 @@ const Category = ({ ...props }: CategoryProps) => {
   }, [category.isLoading]);
 
   const fetchCategoryAndFoods = () => {
+    props.setSearchDB!('guest');
     props.getCategoryByUrl!(name);
   }
 
@@ -107,7 +111,7 @@ const Category = ({ ...props }: CategoryProps) => {
               Kategori bulunamadı.
             </Header>
             <Segment.Inline>
-              <Link to="/">Ana sayfa'</Link>ya dönün ve ordan aramaya başlayın.
+              <Link to="/">Ana sayfa'</Link>ya dönün ve aramaya başlayın.
             </Segment.Inline>
           </Segment>
         </Container>
@@ -118,6 +122,6 @@ const Category = ({ ...props }: CategoryProps) => {
 }
 const mapStateToProps = (state: any) => ({})
 
-const mapDispatchToProps = { getCategoryByUrl,setSearchResulted }
+const mapDispatchToProps = { getCategoryByUrl, setSearchResulted,setSearchClear,setSearchDB }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category);

@@ -4,7 +4,7 @@ import { Input, Select } from 'semantic-ui-react';
 
 import { StateType } from '../states/reducers';
 
-import { startSearch,setSearchText,setSearchCategory,setSearchPage } from '../states/actions/searchActions';
+import { startSearch,setSearchText,setSearchCategory,setSearchPage,startUserSearch } from '../states/actions/searchActions';
 
 import { ResultCategory } from '../models/ICategory';
 
@@ -19,6 +19,7 @@ interface SearchbarProps {
     category: ResultCategory[];
     specialCategory?: boolean;
     startSearch?:Function;
+    startUserSearch?:Function;
     setSearchText?:Function;
     setSearchCategory?:Function;
     setSearchPage?:Function;
@@ -75,7 +76,8 @@ const SearchbarComponent = ({ ...props }: SearchbarProps) => {
 
     const startSearchDeadline = (value:string) =>{
         if (search.info.text === value) {
-            props.startSearch!(search.info);
+            search.searchDB === 'user' ? props.startUserSearch!(search.info) : props.startSearch!(search.info);
+            
         }
     }
 
@@ -89,6 +91,6 @@ const SearchbarComponent = ({ ...props }: SearchbarProps) => {
 }
 const mapStateToProps = (state: any) => ({});
 
-const mapDispatchToProps = { startSearch,setSearchText,setSearchCategory,setSearchPage };
+const mapDispatchToProps = { startSearch,startUserSearch,setSearchText,setSearchCategory,setSearchPage };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchbarComponent);

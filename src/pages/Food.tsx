@@ -66,7 +66,7 @@ const Food = (props: FoodProps) => {
     }, [list.isLoading]);
 
     const handleFoodNameCategory = () => {
-        props.getFood!(searchParams.get('name'));
+        props.getFood!(searchParams.get('name'), searchParams.get('status'));
     }
 
     const saveListToLocal = () => {

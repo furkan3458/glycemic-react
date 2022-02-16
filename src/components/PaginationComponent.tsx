@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { Pagination, PaginationProps } from 'semantic-ui-react';
 
-import { startSearch, setSearchTotal, setSearchPage } from '../states/actions/searchActions';
+import { startSearch, startUserSearch, setSearchTotal, setSearchPage } from '../states/actions/searchActions';
 
 import { StateType } from '../states/reducers';
 
@@ -13,6 +13,7 @@ interface PaginationComponentProps {
   startSearch?: Function;
   setSearchTotal?: Function;
   setSearchPage?: Function;
+  startUserSearch?:Function;
 }
 
 const PaginationComponent = ({ ...props }: PaginationComponentProps) => {
@@ -41,7 +42,7 @@ const PaginationComponent = ({ ...props }: PaginationComponentProps) => {
 
     props.setSearchPage!(active);
     props.setSearchTotal!(total);
-    props.startSearch!(search.info);
+    search.searchDB === 'user' ? props.startUserSearch!(search.info) : props.startSearch!(search.info);
   }
 
   const MeasuredPagination = (): JSX.Element => {
@@ -60,6 +61,6 @@ const PaginationComponent = ({ ...props }: PaginationComponentProps) => {
 }
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = { startSearch, setSearchTotal, setSearchPage };
+const mapDispatchToProps = { startSearch, setSearchTotal, setSearchPage, startUserSearch };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaginationComponent);

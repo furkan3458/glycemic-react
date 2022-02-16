@@ -17,7 +17,8 @@ import ToastContext, { ToastContextProvider } from '../contexts/ToastContext';
 import CldImageComponent from './CldImageComponent';
 
 interface FoodListCellProps {
-    detail:ResultFoods,
+    detail: ResultFoods,
+    isUserIndexes: boolean,
     setListAdd?: Function,
     setListUpdate?: Function
 }
@@ -50,7 +51,7 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
     }
 
     const checkFoodAdd = () => {
-        const temp:ListFoods[] = list.foods;
+        const temp: ListFoods[] = list.foods;
         const index = temp.findIndex(value => { return value.detail.id === props.detail.id });
 
         if (index !== -1 && addCount === temp[index].amount && temp[index].amount === 1)
@@ -62,12 +63,12 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
     }
 
     const handleClickInsert = () => {
-        
+
         if (list.isLoading) {
             toastContext.toastInfo("Lütfen bekleyiniz...");
             return;
         }
-        else if(!getCookieConsentValue(process.env.REACT_APP_COOKIE_NAME)){
+        else if (!getCookieConsentValue(process.env.REACT_APP_COOKIE_NAME)) {
             toastContext.toastError("Bu işlemi gerçekleştirebilmek için lütfen çerezleri kabul ediniz.");
             return;
         }
@@ -93,19 +94,34 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
     }
 
     const handleClickDetail = () => {
-        const url = "/food/detail?name=" + props.detail.url;
+        let url = "/food/detail?name=" + props.detail.url;
+        url += props.isUserIndexes ? '&status=all' : '';
         navigate(url);
     }
 
     const saveListToLocal = () => {
-        localStorage.setItem("list",JSON.stringify(list.foods));
-        localStorage.setItem("list-count",JSON.stringify(list.foodCount));
+        localStorage.setItem("list", JSON.stringify(list.foods));
+        localStorage.setItem("list-count", JSON.stringify(list.foodCount));
+    }
+
+    const RibonFoodStatus = (): JSX.Element => {
+        const color:SemanticCOLORS = props.detail.foodStatus === 'WAITING' ? 'yellow' : (props.detail.foodStatus === 'ACCEPT') ? 'green' : 'red';
+        const text:string = props.detail.foodStatus === 'WAITING' ? 'Bekliyor' : (props.detail.foodStatus === 'ACCEPT') ? 'Kabul' : 'Ret';
+        return (
+            <>
+                <Label as='span' color={color} ribbon style={{ top: -10 }}>
+                    {text}
+                </Label>
+            </>
+        );
     }
 
     return (
         <Card fluid color={glycemicRiskColor()} style={{ width: 250 + "px" }}>
+
             <CldImageComponent width={250} height={250} src={props.detail.image!} wrapped={true} />
             <Card.Content>
+                {props.isUserIndexes && <RibonFoodStatus />}
                 <Card.Header>{props.detail.name}</Card.Header>
                 <Card.Meta>{new Date(props.detail.createdDate).toLocaleDateString()}</Card.Meta>
                 <Card.Description>Glisemik Oranı:

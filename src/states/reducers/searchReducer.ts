@@ -7,6 +7,7 @@ export interface searchState {
     info: SearchInfo;
     isResulted: boolean;
     results:ResultFoods[];
+    searchDB:'user' | 'guest';
 }
 
 export interface SearchInfo {
@@ -25,7 +26,8 @@ const initialState: searchState = {
         page: 1,
         totalPage: 1
     },
-    results:[]
+    results:[],
+    searchDB:'guest'
 }
 
 const searchReducer = (state: searchState = initialState, action: action) => {
@@ -86,6 +88,13 @@ const searchReducer = (state: searchState = initialState, action: action) => {
                     page: 1,
                     totalPage: 1
                 },
+            }
+        }
+        
+        case ActionTypes.SEARCH_SET_DB:{
+            return {
+                ...state,
+                searchDB:action.payload
             }
         }
 
