@@ -34,6 +34,10 @@ export const setSearchTotal = (total:number) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.SEARCH_SET_TOTAL, payload:total});
 }
 
+export const setSearchClear = () => (dispatch:Dispatch<Action>) =>{
+    dispatch({type:ActionTypes.SEARCH_RESULT_CLEAR, payload:[]});
+}
+
 export const startSearch = (search:SearchInfo) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.SEARCH_LOADING, payload:true});
     axios.get("search/search",{
@@ -44,7 +48,6 @@ export const startSearch = (search:SearchInfo) => (dispatch:Dispatch<Action>) =>
         }
     }).then(response => {
         const data:ICategory = response.data;
-        console.log(data);
         if(data.status){
             dispatch({type:ActionTypes.SEARCH_SET_RESULTS, payload:data.result});
             dispatch({type:ActionTypes.SEARCH_SET_PAGE, payload:data.page});

@@ -1,11 +1,11 @@
 import { RouteObject, useRoutes } from 'react-router-dom';
 
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import List from './pages/List';
 import Error from './pages/Error';
 import Food from './pages/Food';
 import Category from './pages/Category';
+import MyIndexes from './pages/MyIndexes';
 
 interface RouteProps {
     auth: "guest" | "user" | string;
@@ -14,17 +14,10 @@ interface RouteProps {
 const Routes = (props: RouteProps) => {
 
     const guestRoutes: RouteObject[] = [
-        {
-            path: "/login",
-            element: <Login />
-        },
-        {
-            path: "/signup",
-            element: <Signup />
-        }
     ];
 
     const userRoutes: RouteObject[] = [
+        { path: "/my-indexes",element: <MyIndexes /> },
     ];
 
     const defaultRoutes: RouteObject[] = props.auth === "guest" ? guestRoutes : userRoutes;
@@ -34,6 +27,7 @@ const Routes = (props: RouteProps) => {
         { path: "*", element: <Error /> },
         { path: "/food/detail", element:<Food/>},
         { path: "/category/:name", element:<Category/>},
+        { path: "/list", element:<List/>},
     );
     const routes = useRoutes(defaultRoutes);
     return (

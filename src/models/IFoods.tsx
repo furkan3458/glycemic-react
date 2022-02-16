@@ -14,6 +14,11 @@ export interface ResultFoods {
     id:            number;
     name:          string;
     glycemicIndex: number;
+    calori:        number;
+    insulin:       number;
+    carbs:         number;
+    serving:       number;
+    acidity:       number;
     image:         string;
     source:        string;
     url:           string;

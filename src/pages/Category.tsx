@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { connect, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { Container, Grid} from 'semantic-ui-react';
+import { Link, useParams } from 'react-router-dom';
+import { Container, Grid, Header, Icon, Segment } from 'semantic-ui-react';
 
 import { StateType } from '../states/reducers';
-import { DrawerFoods } from '../states/reducers/drawerReducer';
 
+import { setSearchResulted } from '../states/actions/searchActions';
 import { getCategoryByUrl } from '../states/actions/categoryActions';
-import { setDrawerAdd, setDrawerUpdate } from '../states/actions/drawerActions';
 
 import NavbarComponent from '../components/NavbarComponent';
 import FooterComponent from '../components/FooterComponent';
@@ -17,15 +16,12 @@ import BreadcrumbComponent from '../components/BreadcrumbComponent';
 import FoodListComponent from '../components/FoodListComponent';
 import PaginationComponent from '../components/PaginationComponent';
 
-import ToastContext, { ToastContextProvider } from '../contexts/ToastContext';
-
 import States from '../utils/states';
 import isEmpty from '../utils/isEmpty';
 
 interface CategoryProps {
   getCategoryByUrl?: Function;
-  setDrawerAdd?: Function,
-  setDrawerUpdate?: Function
+  setSearchResulted?: Function;
 }
 
 const Category = ({ ...props }: CategoryProps) => {
@@ -35,7 +31,7 @@ const Category = ({ ...props }: CategoryProps) => {
   const { name } = useParams();
 
   const food = useSelector((state: StateType) => state.food);
-  const drawer = useSelector((state: StateType) => state.drawer);
+  const list = useSelector((state: StateType) => state.list);
   const category = useSelector((state: StateType) => state.category);
 
   useEffect(() => {
@@ -44,6 +40,7 @@ const Category = ({ ...props }: CategoryProps) => {
 
   useEffect(() => {
     setPageState(States.INIT);
+    props.setSearchResulted!(false);
     fetchCategoryAndFoods();
   }, [name]);
 
@@ -85,24 +82,35 @@ const Category = ({ ...props }: CategoryProps) => {
             />
           </Container>
           <Container style={{ paddingTop: 10, paddingBottom: 50 }}>
-              <FoodListComponent header="Ürünler" foods={category.single.foods} category={[category.single]} specialCategory/>
-              <Grid>
-                <Grid.Row only='computer'>
-                  <Grid.Column textAlign='center'>
-                  <PaginationComponent only="computer" totalPages={category.pages.totalPage} siblingRange={2}/>
-                  </Grid.Column>
-                </Grid.Row>
-                <Grid.Row only='tablet mobile'>
-                  <Grid.Column textAlign='center'>
-                  <PaginationComponent only="mobile" totalPages={category.pages.totalPage}/>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+            <FoodListComponent header={category.single.name} foods={category.single.foods} category={[category.single]} specialCategory />
+            <Grid>
+              <Grid.Row only='computer'>
+                <Grid.Column textAlign='center'>
+                  <PaginationComponent only="computer" totalPages={category.pages.totalPage} siblingRange={2} />
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row only='tablet mobile'>
+                <Grid.Column textAlign='center'>
+                  <PaginationComponent only="mobile" totalPages={category.pages.totalPage} />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           </Container>
         </>
       }
       {
-        (pageState === States.FINISH && isEmpty(category.single)) && <div>Ürün bulunamadı.</div>
+        (pageState === States.FINISH && isEmpty(category.single)) &&
+        <Container style={{ paddingTop: 10, paddingBottom: 50 }}>
+          <Segment placeholder>
+            <Header as='h2' textAlign='center' icon>
+              <Icon name='search' />
+              Kategori bulunamadı.
+            </Header>
+            <Segment.Inline>
+              <Link to="/">Ana sayfa'</Link>ya dönün ve ordan aramaya başlayın.
+            </Segment.Inline>
+          </Segment>
+        </Container>
       }
       <FooterComponent />
     </>
@@ -110,6 +118,6 @@ const Category = ({ ...props }: CategoryProps) => {
 }
 const mapStateToProps = (state: any) => ({})
 
-const mapDispatchToProps = { getCategoryByUrl, setDrawerAdd, setDrawerUpdate }
+const mapDispatchToProps = { getCategoryByUrl,setSearchResulted }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category);

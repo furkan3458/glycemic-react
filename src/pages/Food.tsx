@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Helmet } from 'react-helmet-async';
 import { connect, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
-import { Button, Container, Divider, Grid, Header, Icon, Label } from 'semantic-ui-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Button, Container, Divider, Grid, Header, Icon, Label, Segment } from 'semantic-ui-react';
 
 import { StateType } from '../states/reducers';
-import { DrawerFoods } from '../states/reducers/drawerReducer';
+import { ListFoods } from '../states/reducers/listReducer';
 
 import { getFood } from '../states/actions/foodActions';
-import { setDrawerAdd, setDrawerUpdate } from '../states/actions/drawerActions';
+import { setListAdd, setListUpdate } from '../states/actions/listActions';
 
 import { ResultFoods } from '../models/IFoods';
 
@@ -26,8 +26,8 @@ import * as CSS from 'csstype';
 
 interface FoodProps {
     getFood?: Function;
-    setDrawerAdd?: Function,
-    setDrawerUpdate?: Function
+    setListAdd?: Function,
+    setListUpdate?: Function
 }
 
 const Food = (props: FoodProps) => {
@@ -40,7 +40,7 @@ const Food = (props: FoodProps) => {
     const [foodObject, setfoodObject] = useState<ResultFoods>();
 
     const food = useSelector((state: StateType) => state.food);
-    const drawer = useSelector((state: StateType) => state.drawer);
+    const list = useSelector((state: StateType) => state.list);
 
     const toastContext = useContext<ToastContextProvider>(ToastContext);
 
@@ -58,55 +58,55 @@ const Food = (props: FoodProps) => {
     }, [food.isLoading]);
 
     useEffect(() => {
-        if (!drawer.isLoading && isInsertClick) {
+        if (!list.isLoading && isInsertClick) {
             checkFoodAdd();
             setIsInsertClick(false);
-            saveDrawerToLocal();
+            saveListToLocal();
         }
-    }, [drawer.isLoading]);
+    }, [list.isLoading]);
 
     const handleFoodNameCategory = () => {
         props.getFood!(searchParams.get('name'));
     }
 
-    const saveDrawerToLocal = () => {
-        localStorage.setItem("drawer", JSON.stringify(drawer.foods));
-        localStorage.setItem("drawer-count", JSON.stringify(drawer.foodCount));
+    const saveListToLocal = () => {
+        localStorage.setItem("list", JSON.stringify(list.foods));
+        localStorage.setItem("list-count", JSON.stringify(list.foodCount));
     }
 
     const checkFoodAdd = () => {
-        const temp: DrawerFoods[] = drawer.foods;
+        const temp: ListFoods[] = list.foods;
 
         const index = temp.findIndex(value => { return value.detail.id === foodObject!.id });
 
         if (index !== -1 && addCount === temp[index].amount && temp[index].amount === 1)
-            toastContext.toastSuccess!("Besin çantanıza eklendi.");
+            toastContext.toastSuccess!("Besin listenize eklendi.");
         else if (index !== -1 && addCount === temp[index].amount)
-            toastContext.toastSuccess!("Çantanızdaki besin güncellendi.");
+            toastContext.toastSuccess!("Listenizdeki besin güncellendi.");
         else
-            toastContext.toastError!("Besin çantanıza eklenemedi.");
+            toastContext.toastError!("Besin listenize eklenemedi.");
     }
 
     const handleClickInsert = () => {
-        if (drawer.isLoading) {
+        if (list.isLoading) {
             toastContext.toastInfo("Lütfen bekleyiniz...");
             return;
         }
-        const temp: DrawerFoods[] = drawer.foods;
+        const temp: ListFoods[] = list.foods;
         const index = temp.findIndex(item => { return item.detail.id === foodObject!.id });
 
         if (index === -1) {
-            const item: DrawerFoods = {
+            const item: ListFoods = {
                 amount: 1,
                 detail: foodObject!
             }
-            props.setDrawerAdd!(item);
+            props.setListAdd!(item);
             setAddCount(1);
         }
         else {
-            const item: DrawerFoods = Object.assign({}, temp[index]);
+            const item: ListFoods = Object.assign({}, temp[index]);
             item.amount += 1;
-            props.setDrawerUpdate!(item, index);
+            props.setListUpdate!(item, index);
             setAddCount(item.amount);
         }
 
@@ -114,23 +114,27 @@ const Food = (props: FoodProps) => {
     }
 
     const Rates = (): JSX.Element => {
-        const glycemicStyle: CSS.Properties = {
-            ['--p' as any]: foodObject?.glycemicIndex,
-            ['--c' as any]: foodObject!.glycemicIndex > 55 ? (foodObject!.glycemicIndex > 71 ? 'red' : 'orange') : 'green',
-        };
-
         return (
             <Grid>
                 <Grid.Row centered>
-                    <Grid.Column width={4} textAlign='center'>
-                        <Header as="h3" textAlign='center'>Glisemik Indeksi</Header>
-                        <div className="pie animate" style={glycemicStyle}> {foodObject!.glycemicIndex}%</div>
+                    <Grid.Column width={16} textAlign='left'>
+                        <div>Glisemik indeksi:{food.foods[0].glycemicIndex}</div>
+                        <div>İnsülin indeksi:{food.foods[0].insulin}</div>
+                        <div>Karbonhidratlar:{food.foods[0].carbs}g</div>
+                        <div>Kalori:{food.foods[0].calori}</div>
+                        <div>Porsiyon:{food.foods[0].serving}kcal</div>
+                        <div>Asiditlik:{food.foods[0].acidity}</div>
                     </Grid.Column>
                 </Grid.Row>
                 <Divider></Divider>
                 <Grid.Row>
                     <Grid.Column width={16}>
-                        <Header as="h3" textAlign='center'>Besin Değerleri</Header>
+                        <div style={{ textAlign: 'center' }}>
+                            <Header as="h2">
+                                Besin Değerleri
+                                <Header.Subheader>Önemli besin değerleri</Header.Subheader>
+                            </Header>
+                        </div>
                         <Nutritions />
                     </Grid.Column>
                 </Grid.Row>
@@ -143,17 +147,17 @@ const Food = (props: FoodProps) => {
             <>
                 {
                     foodObject!.foodNutritional!.length > 0 ?
-                        <div style={{ display: "flex", flexWrap:"wrap"}}>
+                        <div style={{ display: "flex", flexWrap: "wrap" }}>
                             {
                                 foodObject!.foodNutritional!.map((item, index) => {
                                     const style: CSS.Properties = {
-                                        ['--p' as any]: item.rate,
-                                        ['--c' as any]: item.rate > 55 ? (item.rate > 71 ? 'red' : 'orange') : 'green',
+                                        ['--p' as any]: item.percent,
+                                        ['--c' as any]: item.percent < 69 ? (item.percent < 35 ? 'red' : 'orange') : 'green',
                                     };
 
                                     return (
-                                        <div key={index} style={{margin:'0 10px', textAlign:"center"}}>
-                                            <div className="pie animate" style={style}> {item.rate}%</div>
+                                        <div key={index} style={{ margin: '0 10px', textAlign: "center" }}>
+                                            <div className="pie animate" style={style}> {item.percent}%</div>
                                             <Header as="h4">{item.nutritional.name}</Header>
                                         </div>
                                     );
@@ -242,11 +246,12 @@ const Food = (props: FoodProps) => {
                                         </Divider>
                                     </div>
                                     <div>
-                                        <div>Glisemik indeksi:{food.foods[0].glycemicindex}</div>
-                                        <div>Glisemik indeksi:{food.foods[0].glycemicindex}</div>
-                                        <div>Glisemik indeksi:{food.foods[0].glycemicindex}</div>
-                                        <div>Glisemik indeksi:{food.foods[0].glycemicindex}</div>
-                                        <div>Glisemik indeksi:{food.foods[0].glycemicindex}</div>
+                                        <div>Glisemik indeksi:{food.foods[0].glycemicIndex}</div>
+                                        <div>İnsülin indeksi:{food.foods[0].insulin}</div>
+                                        <div>Karbonhidratlar:{food.foods[0].carbs}g</div>
+                                        <div>Kalori:{food.foods[0].calori}</div>
+                                        <div>Porsiyon:{food.foods[0].serving}kcal</div>
+                                        <div>Asiditlik:{food.foods[0].acidity}</div>
                                     </div>
                                 </Grid.Column>
                             </Grid.Row>
@@ -268,7 +273,17 @@ const Food = (props: FoodProps) => {
             }
             {
                 (pageState === States.FINISH && !foodObject) &&
-                <div>Ürün bulunamadı.</div>
+                <Container style={{ paddingTop: 10, paddingBottom: 50 }}>
+                    <Segment placeholder>
+                        <Header as='h2' textAlign='center' icon>
+                            <Icon name='search' />
+                            Ürün bulunamadı.
+                        </Header>
+                        <Segment.Inline>
+                            <Link to="/">Ana sayfa'</Link>ya dönün ve ordan aramaya başlayın.
+                        </Segment.Inline>
+                    </Segment>
+                </Container>
             }
             <FooterComponent />
         </>
@@ -277,6 +292,6 @@ const Food = (props: FoodProps) => {
 
 const mapStateToProps = (state: any) => ({})
 
-const mapDispatchToProps = { getFood, setDrawerAdd, setDrawerUpdate }
+const mapDispatchToProps = { getFood, setListAdd, setListUpdate }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Food);

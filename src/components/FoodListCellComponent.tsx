@@ -3,10 +3,11 @@ import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Card, Image, Icon, Reveal, Button, Label } from 'semantic-ui-react';
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
+import CookieConsent, { Cookies, getCookieConsentValue } from "react-cookie-consent";
 
-import { setDrawerAdd, setDrawerUpdate } from '../states/actions/drawerActions';
+import { setListAdd, setListUpdate } from '../states/actions/listActions';
 
-import { DrawerFoods } from '../states/reducers/drawerReducer';
+import { ListFoods } from '../states/reducers/listReducer';
 import { StateType } from '../states/reducers';
 
 import { ResultFoods } from '../models/IFoods';
@@ -17,8 +18,8 @@ import CldImageComponent from './CldImageComponent';
 
 interface FoodListCellProps {
     detail:ResultFoods,
-    setDrawerAdd?: Function,
-    setDrawerUpdate?: Function
+    setListAdd?: Function,
+    setListUpdate?: Function
 }
 
 const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
@@ -27,19 +28,19 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
     const [addCount, setAddCount] = useState(0);
 
     const food = useSelector((state: StateType) => state.food);
-    const drawer = useSelector((state: StateType) => state.drawer);
+    const list = useSelector((state: StateType) => state.list);
 
     const toastContext = useContext<ToastContextProvider>(ToastContext);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!drawer.isLoading && isInsertClick) {
+        if (!list.isLoading && isInsertClick) {
             checkFoodAdd();
             setIsInsertClick(false);
-            saveDrawerToLocal();
+            saveListToLocal();
         }
-    }, [drawer.isLoading]);
+    }, [list.isLoading]);
 
     const glycemicRiskColor = (): SemanticCOLORS => {
         const index = props.detail.glycemicIndex!;
@@ -49,38 +50,42 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
     }
 
     const checkFoodAdd = () => {
-        const temp:DrawerFoods[] = drawer.foods;
-
+        const temp:ListFoods[] = list.foods;
         const index = temp.findIndex(value => { return value.detail.id === props.detail.id });
 
         if (index !== -1 && addCount === temp[index].amount && temp[index].amount === 1)
-            toastContext.toastSuccess!("Besin çantanıza eklendi.");
+            toastContext.toastSuccess!("Besin listenize eklendi.");
         else if (index !== -1 && addCount === temp[index].amount)
-            toastContext.toastSuccess!("Çantanızdaki besin güncellendi.");
+            toastContext.toastSuccess!("Listenizdeki besin güncellendi.");
         else
-            toastContext.toastError!("Besin çantanıza eklenemedi.");
+            toastContext.toastError!("Besin listenize eklenemedi.");
     }
 
     const handleClickInsert = () => {
-        if (drawer.isLoading) {
+        
+        if (list.isLoading) {
             toastContext.toastInfo("Lütfen bekleyiniz...");
             return;
         }
-        const temp: DrawerFoods[] = drawer.foods;
+        else if(!getCookieConsentValue(process.env.REACT_APP_COOKIE_NAME)){
+            toastContext.toastError("Bu işlemi gerçekleştirebilmek için lütfen çerezleri kabul ediniz.");
+            return;
+        }
+        const temp: ListFoods[] = list.foods;
         const index = temp.findIndex(item => { return item.detail.id === props.detail.id });
 
         if (index === -1) {
-            const item: DrawerFoods = {
+            const item: ListFoods = {
                 amount: 1,
                 detail: props.detail
             }
-            props.setDrawerAdd!(item);
+            props.setListAdd!(item);
             setAddCount(1);
         }
         else {
-            const item: DrawerFoods = Object.assign({}, temp[index]);
+            const item: ListFoods = Object.assign({}, temp[index]);
             item.amount += 1;
-            props.setDrawerUpdate!(item, index);
+            props.setListUpdate!(item, index);
             setAddCount(item.amount);
         }
 
@@ -92,9 +97,9 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
         navigate(url);
     }
 
-    const saveDrawerToLocal = () => {
-        localStorage.setItem("drawer",JSON.stringify(drawer.foods));
-        localStorage.setItem("drawer-count",JSON.stringify(drawer.foodCount));
+    const saveListToLocal = () => {
+        localStorage.setItem("list",JSON.stringify(list.foods));
+        localStorage.setItem("list-count",JSON.stringify(list.foodCount));
     }
 
     return (
@@ -130,6 +135,6 @@ const FoodListCellComponent = ({ ...props }: FoodListCellProps) => {
 };
 const mapStateToProps = (state: any) => ({});
 
-const mapDispatchToProps = { setDrawerAdd, setDrawerUpdate };
+const mapDispatchToProps = { setListAdd, setListUpdate };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FoodListCellComponent);

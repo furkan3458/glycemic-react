@@ -5,6 +5,7 @@ import { Container, Grid } from 'semantic-ui-react'
 
 import { StateType } from '../states/reducers';
 import { getFoodList } from '../states/actions/foodActions';
+import { setSearchResulted,setSearchClear } from '../states/actions/searchActions';
 
 import NavbarComponent from '../components/NavbarComponent';
 import SpinnerComponent from '../components/SpinnerComponent';
@@ -13,7 +14,9 @@ import FoodListComponent from '../components/FoodListComponent';
 import PaginationComponent from '../components/PaginationComponent';
 
 interface HomeProps {
-  getFoodList: Function
+  getFoodList: Function,
+  setSearchResulted: Function,
+  setSearchClear: Function,
 }
 
 const Home = ({ ...props }: HomeProps) => {
@@ -23,6 +26,8 @@ const Home = ({ ...props }: HomeProps) => {
 
   useEffect(() => {
     props.getFoodList();
+    props.setSearchResulted();
+    props.setSearchClear();
   }, []);
 
   useEffect(() => {
@@ -65,6 +70,6 @@ const Home = ({ ...props }: HomeProps) => {
 
 const mapStateToProps = (state: any) => ({});
 
-const mapDispatchToProps = { getFoodList };
+const mapDispatchToProps = { getFoodList,setSearchResulted, setSearchClear };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

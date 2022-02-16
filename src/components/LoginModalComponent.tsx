@@ -2,8 +2,9 @@ import { useContext, useEffect, useState } from 'react'
 import { useSelector, connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button, Divider, Form, Grid, Header, Icon, List, Message, Modal } from 'semantic-ui-react';
-import { StateType } from '../states/reducers';
+import { useMediaQuery } from 'react-responsive';
 
+import { StateType } from '../states/reducers';
 import { authLogin } from '../states/actions/authActions';
 
 import ToastContext, { ToastContextProvider } from '../contexts/ToastContext';
@@ -28,6 +29,8 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
     const auth = useSelector((state: StateType) => state.auth);
 
     const toastContext = useContext<ToastContextProvider>(ToastContext);
+
+    const isMobileOrTablet = useMediaQuery({ query: '(max-width: 992px)' });
 
     useEffect(() => {
         if (auth.isAuthenticated)
@@ -100,8 +103,8 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
             closeIcon
         >
             <Modal.Content>
-                <Grid columns={2} stackable centered>
-                    <Grid.Column width={8}>
+                <Grid stackable centered>
+                    <Grid.Column computer={8} mobile={16}>
                         <Form size={"small"} loading={auth.isLoading} error={auth.isAuthFail}>
                             <Message
                                 error
@@ -142,8 +145,8 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
                                 content={<Link to='/test'>Şifreni mi unuttun? Buraya tıkla!</Link>}
                             />
                         </List>
-                    </Grid.Column >
-                    <Grid.Column verticalAlign='middle' width={8}>
+                    </Grid.Column>
+                    <Grid.Column verticalAlign='middle' computer={8} mobile={16}>
                         <div>
                             <Header as='h3'>Henüz kayıt olmadın mı?</Header>
                             <Button content='Kayıt ol' icon='signup' size='big' onClick={() => onSignupTrigger()} />
@@ -162,7 +165,7 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
                         </div>
                     </Grid.Column>
                 </Grid>
-                <Divider vertical><Icon name="circle" /></Divider>
+                {!isMobileOrTablet && <Divider vertical ><Icon name="circle" /></Divider>}
             </Modal.Content>
         </Modal>
     );

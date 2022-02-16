@@ -3,7 +3,7 @@ import { useSelector,TypedUseSelectorHook } from "react-redux";
 
 import authReducer, { authState } from "./authReducer";
 import foodReducer, { foodState } from './foodReducer';
-import drawerReducer, { drawerState } from './drawerReducer';
+import listReducer, { listState } from './listReducer';
 import categoryReducer, { categoryState } from './categoryReducer';
 import searchReducer, { searchState } from './searchReducer';
 import cityReducer, { cityState } from './cityReducer';
@@ -11,7 +11,7 @@ import cityReducer, { cityState } from './cityReducer';
 const reducers = combineReducers({
     auth:authReducer,
     food:foodReducer,
-    drawer:drawerReducer,
+    list:listReducer,
     category:categoryReducer,
     search:searchReducer,
     city:cityReducer,
@@ -20,7 +20,7 @@ const reducers = combineReducers({
 interface RootState{
     auth:authState;
     food:foodState;
-    drawer:drawerState;
+    list:listState;
     category:categoryState;
     search:searchState;
     city:cityState;
