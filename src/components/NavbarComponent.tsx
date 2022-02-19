@@ -1,7 +1,7 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { connect, useSelector } from 'react-redux';
-import { Menu, Container, Grid, Dropdown, Icon, Image, Button, Modal, Form, Divider, Header, List, Label } from 'semantic-ui-react'
+import { Menu, Grid, Dropdown, Icon, Image, Button, Label } from 'semantic-ui-react'
 
 import { StateType } from '../states/reducers';
 

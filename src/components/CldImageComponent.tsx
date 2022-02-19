@@ -1,7 +1,7 @@
 import React from 'react';
 import { Cloudinary } from "@cloudinary/url-gen";
 import { Image } from 'semantic-ui-react';
-import {limitPad,fit} from "@cloudinary/url-gen/actions/resize";
+import { limitPad } from "@cloudinary/url-gen/actions/resize";
 
 const cld = new Cloudinary({
     cloud: {

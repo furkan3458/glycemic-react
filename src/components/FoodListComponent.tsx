@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Grid, Input, Card, Icon, Header, Dropdown, Button, Select, Segment, Dimmer, Loader } from 'semantic-ui-react';
+import { useState, useEffect } from 'react';
+import { Grid, Card, Icon, Header, Segment, Dimmer, Loader } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 
-import { IFoods, ResultFoods } from '../models/IFoods';
+import { ResultFoods } from '../models/IFoods';
 import { ResultCategory } from '../models/ICategory';
 
 import { StateType } from '../states/reducers';

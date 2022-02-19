@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { connect, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';

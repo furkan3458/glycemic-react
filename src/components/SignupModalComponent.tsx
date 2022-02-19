@@ -1,6 +1,6 @@
-import React,{ useContext, useEffect,useState } from 'react';
+import { useContext, useEffect,useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { Button, Divider, Form, Grid, GridRow, Header, Icon, List, Message, Modal } from 'semantic-ui-react'
+import { Button, Divider, Form, Grid, Header, Icon, Message, Modal } from 'semantic-ui-react'
 
 import { validateEmail, authSignup } from '../states/actions/authActions';
 import { setCity } from '../states/actions/cityActions';

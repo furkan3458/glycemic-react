@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { getCookieConsentValue } from 'react-cookie-consent';
 import { connect, useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, connect } from 'react-redux';
 import { Helmet } from "react-helmet-async";
 import { Container, Grid } from 'semantic-ui-react'

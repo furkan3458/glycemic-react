@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useMediaQuery } from 'react-responsive';
-import { Button, Container, Divider, Grid, Header, Icon, Input, Item, Label, Segment } from 'semantic-ui-react';
+import { Container, Grid, Header, Icon, Segment } from 'semantic-ui-react';
 
 import States from '../utils/states';
 

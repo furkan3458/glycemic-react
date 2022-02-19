@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Helmet } from 'react-helmet-async';
 import { connect, useSelector } from 'react-redux';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Button, Container, Divider, Grid, Header, Icon, Label, Segment } from 'semantic-ui-react';
+import { Button, Container, Divider, Grid, Header, Icon, Segment } from 'semantic-ui-react';
 
 import { StateType } from '../states/reducers';
 import { ListFoods } from '../states/reducers/listReducer';

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Card, Image, Icon, Reveal, Button, Label } from 'semantic-ui-react';
+import { Card, Icon, Button, Label } from 'semantic-ui-react';
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
-import CookieConsent, { Cookies, getCookieConsentValue } from "react-cookie-consent";
+import { getCookieConsentValue } from "react-cookie-consent";
 
 import { setListAdd, setListUpdate } from '../states/actions/listActions';
 
