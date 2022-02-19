@@ -4,8 +4,8 @@ import { Provider, useSelector, connect } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { Sidebar, Segment, Menu, Icon } from 'semantic-ui-react';
 import CookieConsent from 'react-cookie-consent';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -33,6 +33,7 @@ const App: React.FC = ({ ...props }: any): JSX.Element => {
 
   const [authLocale, setauthLocale] = useState("guest");
   const [loaded, setloaded] = useState(false);
+  const [fingerPrintLoaded, setFingerPrintLoaded] = useState(false);
   //const [showSidebar, setshowSidebar] = useState(false);
 
   const auth = useSelector((state: StateType) => state.auth);
@@ -45,16 +46,17 @@ const App: React.FC = ({ ...props }: any): JSX.Element => {
       props.setList();
       props.getCategoryList();
       initToastContext();
+      initFingerPrint();
       //initSidebarContext();
     }
   }, []);
 
   useEffect(() => {
-    if (auth.isValidate && list.isInitialize && category.isInitialize) {
+    if (auth.isValidate && list.isInitialize && category.isInitialize && fingerPrintLoaded) {
       setAuthLevel();
       setloaded(true);
     }
-  }, [auth.isValidate, list.isInitialize, category.isInitialize]);
+  }, [auth.isValidate, list.isInitialize, category.isInitialize,fingerPrintLoaded]);
 
   const initToastContext = () => {
     const context: ToastContextProvider = {
@@ -65,6 +67,17 @@ const App: React.FC = ({ ...props }: any): JSX.Element => {
     }
 
     setToastContext(context);
+  }
+
+  const initFingerPrint = () => {
+    const fpPromise = FingerprintJS.load();
+
+    (async () => {
+      const fp = await fpPromise
+      const result = await fp.get()
+      localStorage.setItem(process.env.REACT_APP_FINGERPRINT_NAME!,result.visitorId);
+      setFingerPrintLoaded(true);
+    })()
   }
 
   /*const initSidebarContext = () => {

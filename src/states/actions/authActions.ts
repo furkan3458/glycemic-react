@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import Action from '../../utils/action';
 import ActionTypes from '../../utils/types';
 import {ValidityStates} from '../reducers/authReducer';
+
 const axios = Axios.create({
     baseURL:process.env.REACT_APP_BASE_URL,
 });
@@ -30,7 +31,11 @@ export const setDefaultValidateEmail = () => (dispatch:Dispatch<Action>) => {
 
 export const authLogin = (user:any) => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
-    axios.post("auth/login",user).then(response => {
+    axios.post("auth/login",user,{
+        headers:{
+            Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+        }
+    }).then(response => {
         const data = response.data;
         dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
         
@@ -65,7 +70,11 @@ export const validateUser = () => (dispatch:Dispatch<Action>) => {
             token:user.token,
         }
 
-        axios.post("auth/validate",validate).then(response=>{
+        axios.post("auth/validate",validate,{
+            headers:{
+                Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+            }
+        }).then(response=>{
             const data = response.data;
             if(data.result){
                 dispatch({type:ActionTypes.AUTH_VALIDATE, payload:user});
@@ -87,7 +96,11 @@ export const validateUser = () => (dispatch:Dispatch<Action>) => {
 
 export const authSignup = (form:any) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
-    axios.post("auth/signup",form).then(response => {
+    axios.post("auth/signup",form,{
+        headers:{
+            Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+        }
+    }).then(response => {
         const data:any = response.data;
         dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
         
@@ -115,7 +128,8 @@ export const authLogout = (form:any) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_LOGOUT, payload:false});
     axios.post("auth/logout",form,{
         headers:{
-            Authorization:"Bearer "+form.token
+            Authorization:"Bearer "+form.token,
+            Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
         }
     }).then(response=>{
         clearStorage();
@@ -129,7 +143,11 @@ export const authLogout = (form:any) => (dispatch:Dispatch<Action>) =>{
 
 export const validateEmail = (email:string) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_VALIDATE_EMAIL, payload:{isValidating:true, validateState:ValidityStates.IDLE}});
-    axios.post("auth/validate_email",{email:email}).then(response=>{
+    axios.post("auth/validate_email",{email:email},{
+        headers:{
+            Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+        }
+    }).then(response=>{
         const data = response.data;
         if(data.result)
             dispatch({type:ActionTypes.AUTH_VALIDATE_EMAIL, payload:{isValidating:false,validateState:ValidityStates.VALID}});

@@ -76,7 +76,7 @@ const NavbarComponent = ({ ...props }: NavbarProps) => {
                 <Grid container className="fluid">
                     <Grid.Row only='computer'>
                         <Menu.Item name='home' active={activeItem === 'home'} onClick={() => handleNavigateClick("home", "/")} link>
-                            <Image size='mini' src='/logo192.png' style={{ marginRight: '1.5em' }} />
+                            <Image size='mini' src='/logo512.png' style={{ marginRight: '1.5em' }} />
                             Glycemic Indexer
                         </Menu.Item>
                         <Dropdown item simple text='Türler'>

@@ -8,6 +8,9 @@ import {ListFoods} from '../reducers/listReducer';
 
 const axios = Axios.create({
     baseURL:process.env.REACT_APP_BASE_URL,
+    headers:{
+        Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+    }
 });
 
 export const setListLoading = (state:boolean) => (dispatch:Dispatch<Action>) => {

@@ -8,6 +8,9 @@ import { SearchInfo } from '../reducers/searchReducer';
 
 const axios = Axios.create({
     baseURL:process.env.REACT_APP_BASE_URL,
+    headers:{
+        Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+    }
 });
 
 export const setSearchLoading = (state:boolean) => (dispatch:Dispatch<Action>) =>{

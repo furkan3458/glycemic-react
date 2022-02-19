@@ -5,6 +5,7 @@
     "dependencies": {
         "@cloudinary/react": "^1.0.1",
         "@cloudinary/url-gen": "^1.5.1",
+        "@fingerprintjs/fingerprintjs": "^3.3.2",
         "@testing-library/jest-dom": "^5.16.2",
         "@testing-library/react": "^12.1.2",
         "@testing-library/user-event": "^13.5.0",
@@ -39,7 +40,8 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "dev": "react-scripts start",
+        "start": "serve -s build",
         "build": "GENERATE_SOURCEMAP=false react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

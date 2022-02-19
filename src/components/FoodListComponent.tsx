@@ -9,13 +9,14 @@ import { StateType } from '../states/reducers';
 
 import FoodListCellComponent from './FoodListCellComponent';
 import SearchbarComponent from './SearchbarComponent';
+import { Link } from 'react-router-dom';
 
 interface FoodListProps {
     header: string,
     foods: ResultFoods[],
     category: ResultCategory[];
     specialCategory?: boolean;
-    isUserIndexes?:boolean;
+    isUserIndexes?: boolean;
 }
 
 const FoodListComponent = ({ ...props }: FoodListProps) => {
@@ -46,17 +47,25 @@ const FoodListComponent = ({ ...props }: FoodListProps) => {
             </Grid.Row>
             <Grid.Row>
                 <Grid.Column width={16}>
-                    <Segment>
-                    <Dimmer active={search.isLoading} inverted>
-                        <Loader inverted size='huge'>Yükleniyor</Loader>
-                    </Dimmer>
-                    {foods.length ?
-                        <Card.Group centered>
-                            {foods.map((item, index) => <FoodListCellComponent key={index} detail={item} isUserIndexes={props.isUserIndexes!}/>)}
-                        </Card.Group>
-                        :
-                        <Card.Group centered><Header as="h3" style={{padding:20}}>Ürün bulunamadı.</Header></Card.Group>
-                    }
+                    <Segment placeholder={foods.length < 1}>
+                        {foods.length ?
+                            <Card.Group centered>
+                                {foods.map((item, index) => <FoodListCellComponent key={index} detail={item} isUserIndexes={props.isUserIndexes!} />)}
+                            </Card.Group>
+                            :
+                            <>
+                                <Header as='h2' textAlign='center' icon>
+                                    <Icon name='search' />
+                                    Ürün bulunamadı.
+                                </Header>
+                                <Segment.Inline>
+                                    <Link to="/">Ana sayfa'</Link>ya dönün ve ordan aramaya başlayın.
+                                </Segment.Inline>
+                            </>
+                        }
+                        <Dimmer active={search.isLoading} inverted>
+                            <Loader inverted size='huge'>Yükleniyor</Loader>
+                        </Dimmer>
                     </Segment>
                 </Grid.Column>
             </Grid.Row>
