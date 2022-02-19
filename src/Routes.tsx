@@ -6,6 +6,7 @@ import Error from './pages/Error';
 import Food from './pages/Food';
 import Category from './pages/Category';
 import MyIndexes from './pages/MyIndexes';
+import Activation from './pages/Activation';
 
 interface RouteProps {
     auth: "guest" | "user" | string;
@@ -24,10 +25,11 @@ const Routes = (props: RouteProps) => {
 
     defaultRoutes.push(
         { path: "/",element: <Home /> },
-        { path: "*", element: <Error /> },
+        { path: "/activation", element: <Activation />},
         { path: "/food/detail", element:<Food/>},
         { path: "/category/:name", element:<Category/>},
         { path: "/list", element:<List/>},
+        { path: "*", element: <Error /> },
     );
     const routes = useRoutes(defaultRoutes);
     return (

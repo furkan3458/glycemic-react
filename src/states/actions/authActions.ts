@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 
 import Action from '../../utils/action';
 import ActionTypes from '../../utils/types';
-import {ValidityStates} from '../reducers/authReducer';
+import { ValidityStates, ActivationStates } from '../reducers/authReducer';
 
 const axios = Axios.create({
     baseURL:process.env.REACT_APP_BASE_URL,
@@ -157,6 +157,27 @@ export const validateEmail = (email:string) => (dispatch:Dispatch<Action>) =>{
     }).catch(error=>{
         console.log(error.response);
         dispatch({type:ActionTypes.AUTH_VALIDATE_EMAIL, payload:{isValidating:false,validateState:ValidityStates.IDLE}});
+    });
+}
+
+export const setActivateAuth = (form:any) => (dispatch:Dispatch<Action>) =>{
+    dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
+    axios.post("auth/activate",form,{
+        headers:{
+            Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+        }
+    }).then(response => {
+        const data = response.data;
+
+        if(data.status){
+            dispatch({type:ActionTypes.AUTH_ACTIVATION, payload:ActivationStates.OK});
+        }else{
+            dispatch({type:ActionTypes.AUTH_ACTIVATION, payload:data.result});
+        }
+        dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
+    }).catch(error => {
+        dispatch({type:ActionTypes.AUTH_ACTIVATION, payload:ActivationStates.INVALID});
+        dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
     });
 }
 
