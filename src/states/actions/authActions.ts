@@ -181,6 +181,9 @@ export const setActivateAuth = (form:any) => (dispatch:Dispatch<Action>) =>{
     });
 }
 
+export const authForgetPassword = (email:string) => (dispatch:Dispatch<Action>) =>{
+}
+
 const clearStorage = () =>{
     localStorage.removeItem("jwtKey");
     localStorage.removeItem("session");

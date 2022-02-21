@@ -14,6 +14,7 @@ import { ResultCategory } from '../models/ICategory';
 
 import LoginModalComponent from './LoginModalComponent';
 import SignupModalComponent from './SignupModalComponent';
+import ForgetPasswordModalComponent from './ForgetPasswordModalComponent';
 
 interface NavbarProps {
     authLogout?: Function;
@@ -25,7 +26,8 @@ const NavbarComponent = ({ ...props }: NavbarProps) => {
 
     const [activeItem, setActiveItem] = useState("");
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const [showSignupModal, setshowSignupModal] = useState(false);
+    const [showSignupModal, setShowSignupModal] = useState(false);
+    const [showForgetPasswordModal, setShowForgetPasswordModal] = useState(false);
 
     const authContext = useContext<AuthContextProvider>(AuthContext);
     const sidebarContext = useContext<SidebarContextProvider>(SidebarContext);
@@ -40,17 +42,26 @@ const NavbarComponent = ({ ...props }: NavbarProps) => {
 
     const openLoginModal = () => {
         setShowLoginModal(true);
-        setshowSignupModal(false);
+        setShowSignupModal(false);
+        setShowForgetPasswordModal(false);
     }
 
     const openSignupModal = () => {
         setShowLoginModal(false);
-        setshowSignupModal(true);
+        setShowSignupModal(true);
+        setShowForgetPasswordModal(false);
+    }
+
+    const openForgetPasswordModal = () =>{
+        setShowLoginModal(false);
+        setShowSignupModal(false);
+        setShowForgetPasswordModal(true);
     }
 
     const onCloseModal = () => {
         setShowLoginModal(false);
-        setshowSignupModal(false);
+        setShowSignupModal(false);
+        setShowForgetPasswordModal(false);
     }
 
     const onLogout = () => {
@@ -68,8 +79,9 @@ const NavbarComponent = ({ ...props }: NavbarProps) => {
             {
                 authContext.authType === "guest" ?
                     <>
-                        <LoginModalComponent showModal={showLoginModal} onClose={() => onCloseModal()} onSignupClick={() => openSignupModal()} />
+                        <LoginModalComponent showModal={showLoginModal} onClose={() => onCloseModal()} onSignupClick={() => openSignupModal()} onForgetPasswordClick={()=> openForgetPasswordModal()}/>
                         <SignupModalComponent showModal={showSignupModal} onClose={() => onCloseModal()} onLoginClick={() => openLoginModal()} />
+                        <ForgetPasswordModalComponent showModal={showForgetPasswordModal} onClose={() => onCloseModal()} onLoginClick={() => openLoginModal()} onSignupClick={() => openSignupModal()}/>
                     </> : <></>
             }
             <Menu borderless={true} size='massive' inverted fluid>

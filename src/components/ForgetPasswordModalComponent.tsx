@@ -4,51 +4,29 @@ import { Button, Divider, Form, Grid, Header, Icon, List, Message, Modal } from 
 import { useMediaQuery } from 'react-responsive';
 
 import { StateType } from '../states/reducers';
-import { authLogin } from '../states/actions/authActions';
+import { authForgetPassword } from '../states/actions/authActions';
 
 import ToastContext, { ToastContextProvider } from '../contexts/ToastContext';
 
-interface LoginProps {
+interface ForgetPasswordProps {
     showModal: boolean;
     onClose: Function;
     onSignupClick: Function;
-    onForgetPasswordClick: Function;
-    authLogin?: Function;
+    onLoginClick: Function;
+    authForgetPassword:Function;
 }
 
-const LoginModalComponent = ({ ...props }: LoginProps) => {
+const ForgetPasswordModalComponent = ({...props}:ForgetPasswordProps) => {
 
     const [email, setEmail] = useState("");
     const [emailValid, setEmailValid] = useState(false);
     const [emailError, setEmailError] = useState(false);
-    const [password, setPassword] = useState("");
-    const [passwordValid, setPasswordValid] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
-    const [rememberMe, setRememberMe] = useState(false);
 
     const auth = useSelector((state: StateType) => state.auth);
 
     const toastContext = useContext<ToastContextProvider>(ToastContext);
 
     const isMobileOrTablet = useMediaQuery({ query: '(max-width: 992px)' });
-
-    useEffect(() => {
-        if (auth.isAuthenticated)
-            window.location.href = "/";
-    }, [auth.isAuthenticated])
-    
-
-    const onCloseModal = () => {
-        props.onClose(false);
-    }
-
-    const onSignupTrigger = () => {
-        props.onSignupClick();
-    }
-
-    const onForgetPasswordTrigger = () =>{
-        props.onForgetPasswordClick();
-    }
 
     const onChangeEmail = (value: string) => {
         const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -59,20 +37,19 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
         setEmailValid(emailValid);
     }
 
-    const onChangePassword = (value: string) => {
-        const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
-        const passwordValid = passwordRegex.test(value);
-
-        setPassword(value);
-        setPasswordError(false);
-        setPasswordValid(passwordValid);
+    const onCloseModal = () => {
+        props.onClose(false);
     }
 
-    const onChangeRememberMe = (value: any) => {
-        setRememberMe(value.checked);
+    const onLoginTrigger = () => {
+        props.onLoginClick();
     }
 
-    const onClickLogin = () => {
+    const onSignupTrigger = () => {
+        props.onSignupClick();
+    }
+
+    const onForgetPasswordSend = () => {
         if (auth.isLoading) {
             toastContext.toastInfo("Lütfen bekleyiniz...");
             return;
@@ -83,20 +60,8 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
             setEmailError(true);
             return;
         }
-        else if (!passwordValid) {
-            let passwordInput = document.querySelector<HTMLInputElement>("#password");
-            passwordInput!.focus();
-            setPasswordError(true);
-            return;
-        }
 
-        const authObject = {
-            email: email,
-            password: password,
-            rememberMe: rememberMe
-        }
-
-        props.authLogin!(authObject);
+        props.authForgetPassword(email);
     }
 
     return (
@@ -127,26 +92,13 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
                                 onKeyUp={(e: any) => onChangeEmail(e.currentTarget.value)}
                                 autoFocus
                             />
-                            <Form.Input id={"password"}
-                                icon='lock'
-                                iconPosition='left'
-                                label='Şifre'
-                                type='password'
-                                placeholder='Şifre'
-                                error={passwordError ? {
-                                    content: 'Lütfen geçerli bir şifre girin.',
-                                    pointing: 'below',
-                                } : false}
-                                onKeyUp={(e: any) => onChangePassword(e.currentTarget.value)}
-                            />
-                            <Form.Checkbox label='Beni hatırla' onChange={(e, val) => onChangeRememberMe(val)} />
-                            <Button content='Giriş' primary onClick={() => onClickLogin()} />
+                            <Button content='Gönder' primary onClick={() => onForgetPasswordSend()} />
                         </Form>
                         <Divider></Divider>
                         <List>
                             <List.Item
                                 icon='help'
-                                content={<a onClick={()=> onForgetPasswordTrigger()}>Şifreni mi unuttun? Buraya tıkla!</a>}
+                                content={<a onClick={()=> onLoginTrigger()}>Giriş yapmak için buraya tıkla.</a>}
                             />
                         </List>
                     </Grid.Column>
@@ -176,6 +128,6 @@ const LoginModalComponent = ({ ...props }: LoginProps) => {
 }
 const mapStateToProps = (state: any) => ({});
 
-const mapDispatchToProps = { authLogin };
+const mapDispatchToProps = { authForgetPassword };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginModalComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(ForgetPasswordModalComponent);
