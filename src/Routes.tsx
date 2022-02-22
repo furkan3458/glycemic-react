@@ -7,6 +7,7 @@ import Food from './pages/Food';
 import Category from './pages/Category';
 import MyIndexes from './pages/MyIndexes';
 import Activation from './pages/Activation';
+import ResetPassword from './pages/ResetPassword';
 
 interface RouteProps {
     auth: "guest" | "user" | string;
@@ -15,6 +16,7 @@ interface RouteProps {
 const Routes = (props: RouteProps) => {
 
     const guestRoutes: RouteObject[] = [
+        { path: "/reset",element: <ResetPassword /> },
     ];
 
     const userRoutes: RouteObject[] = [

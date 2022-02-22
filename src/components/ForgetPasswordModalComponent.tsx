@@ -4,7 +4,8 @@ import { Button, Divider, Form, Grid, Header, Icon, List, Message, Modal } from 
 import { useMediaQuery } from 'react-responsive';
 
 import { StateType } from '../states/reducers';
-import { authForgetPassword } from '../states/actions/authActions';
+import { MailResultStates } from '../states/reducers/mailReducer';
+import { setResetMail,setMailClear } from '../states/actions/mailActions';
 
 import ToastContext, { ToastContextProvider } from '../contexts/ToastContext';
 
@@ -13,7 +14,8 @@ interface ForgetPasswordProps {
     onClose: Function;
     onSignupClick: Function;
     onLoginClick: Function;
-    authForgetPassword:Function;
+    setResetMail:Function;
+    setMailClear:Function;
 }
 
 const ForgetPasswordModalComponent = ({...props}:ForgetPasswordProps) => {
@@ -23,10 +25,25 @@ const ForgetPasswordModalComponent = ({...props}:ForgetPasswordProps) => {
     const [emailError, setEmailError] = useState(false);
 
     const auth = useSelector((state: StateType) => state.auth);
+    const mail = useSelector((state: StateType) => state.mail);
 
     const toastContext = useContext<ToastContextProvider>(ToastContext);
 
     const isMobileOrTablet = useMediaQuery({ query: '(max-width: 992px)' });
+
+    useEffect(() => {
+      props.setMailClear();
+    }, []);
+
+    useEffect(() => {
+        if(!mail.isLoading && mail.responseState === MailResultStates.SUCCESS){
+            toastContext.toastSuccess("Şifre sıfırlama bağlantısı e-postanıza gönderildi.");
+            props.onClose(false);
+            props.setMailClear();
+        }
+
+    }, [mail.isLoading]);
+    
 
     const onChangeEmail = (value: string) => {
         const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -61,7 +78,7 @@ const ForgetPasswordModalComponent = ({...props}:ForgetPasswordProps) => {
             return;
         }
 
-        props.authForgetPassword(email);
+        props.setResetMail(email);
     }
 
     return (
@@ -74,11 +91,11 @@ const ForgetPasswordModalComponent = ({...props}:ForgetPasswordProps) => {
             <Modal.Content>
                 <Grid stackable centered>
                     <Grid.Column computer={8} mobile={16}>
-                        <Form size={"small"} loading={auth.isLoading} error={auth.isAuthFail}>
+                        <Form size={"small"} loading={mail.isLoading} error={mail.responseState !== MailResultStates.SUCCESS && mail.responseState !== MailResultStates.NULL}>
                             <Message
                                 error
-                                header='Giriş Başarısız'
-                                content='Girdiğiniz e-posta veya şifre yanlış. Lütfen kontrol ederek tekrar giriniz.'
+                                header='Sıfırlama Başarısız'
+                                content={mail.responseState === MailResultStates.INVALID ? 'Girdiğiniz e-posta geçersiz. Lütfen kontrol ederek tekrar giriniz.' : 'Şifre sıfırlama bağlantısı gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.'}
                             />
                             <Form.Input id={"email"}
                                 icon='at'
@@ -128,6 +145,6 @@ const ForgetPasswordModalComponent = ({...props}:ForgetPasswordProps) => {
 }
 const mapStateToProps = (state: any) => ({});
 
-const mapDispatchToProps = { authForgetPassword };
+const mapDispatchToProps = { setResetMail,setMailClear };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ForgetPasswordModalComponent);

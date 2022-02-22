@@ -2,28 +2,34 @@ import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { connect, useSelector } from 'react-redux';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
-
-import { StateType } from '../states/reducers';
-
-import { setActivateAuth } from '../states/actions/authActions';
+import { Button, Container, Header, Icon, Segment, Form } from 'semantic-ui-react';
 
 import { ActivityStates } from '../states/reducers/authReducer';
+import { StateType } from '../states/reducers';
+
+import { validateResetPassParams } from '../states/actions/authActions';
+
 import States from '../utils/states';
 
 import NavbarComponent from '../components/NavbarComponent';
 import FooterComponent from '../components/FooterComponent';
 import SpinnerComponent from '../components/SpinnerComponent';
 
-interface ActivateProps {
-    setActivateAuth: Function;
-};
+interface ResetPasswordProps{
+    validateResetPassParams:Function;
+}
 
-const Activation = ({ ...props }: ActivateProps) => {
+const ResetPassword = ({...props}:ResetPasswordProps) => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     const [pageState, setPageState] = useState<States>(States.INIT);
+    const [password, setPassword] = useState("");
+    const [passwordValid, setPasswordValid] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [passwordConfirmValid, setPasswordConfirmValid] = useState(false);
+    const [passwordConfirmError, setPasswordConfirmError] = useState(false);
 
     const auth = useSelector((state: StateType) => state.auth);
 
@@ -40,14 +46,36 @@ const Activation = ({ ...props }: ActivateProps) => {
     }, [auth.isLoading]);
 
     const handleParameters = () => {
-        const key = searchParams.get('activateKey');
+        const key = searchParams.get('forgetKey');
         const to = searchParams.get('to');
 
         const form = {
             email: to,
-            activateKey: key
+            forgetKey: key
         }
-        props.setActivateAuth(form);
+        props.validateResetPassParams(form);
+    }
+
+    const onChangePassword = (value: string) => {
+        const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+        const passwordValid = passwordRegex.test(value);
+
+        setPassword(value);
+        setPasswordError(false);
+        setPasswordValid(passwordValid);
+    }
+
+    const onChangePasswordConf = (value: string) => {
+        const passwordRegex = new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
+        const passwordValid = passwordRegex.test(value);
+
+        setPassword(value);
+        setPasswordError(false);
+        setPasswordValid(passwordValid);
+    }
+
+    const changePasswordClick = () => {
+
     }
 
     const ActivationResult = (): JSX.Element => {
@@ -56,11 +84,35 @@ const Activation = ({ ...props }: ActivateProps) => {
             <>
                 {auth.activity === ActivityStates.OK &&
                     <>
-                        <Header icon>
-                            <Icon name='thumbs up outline' />
-                            Aktivasyon tamamlandı.
-                        </Header>
-                        <Button primary onClick={() => navigate("/")}>Ana Sayfaya Dön</Button>
+                        <Header textAlign='center'>Şifreni sıfırla</Header>
+                        <Form size={"small"} loading={auth.isLoading} error={auth.isAuthFail}>
+
+                        <Form.Input id={"password"}
+                                icon='lock'
+                                iconPosition='left'
+                                label='Şifre'
+                                type='password'
+                                placeholder='Şifre'
+                                error={passwordError ? {
+                                    content: 'Lütfen geçerli bir şifre girin.',
+                                    pointing: 'below',
+                                } : false}
+                                onKeyUp={(e: any) => onChangePassword(e.currentTarget.value)}
+                            />
+                        <Form.Input id={"password"}
+                                icon='lock'
+                                iconPosition='left'
+                                label='Şifre'
+                                type='password'
+                                placeholder='Şifre(Tekrar)'
+                                error={passwordConfirmError ? {
+                                    content: 'Lütfen şifreyi tekrar girin.',
+                                    pointing: 'below',
+                                } : false}
+                                onKeyUp={(e: any) => onChangePasswordConf(e.currentTarget.value)}
+                            />
+                            <Button fluid content='Değiştir' primary onClick={() => changePasswordClick()}></Button>
+                        </Form>
                     </>
                 }
                 {auth.activity === ActivityStates.NULL &&
@@ -102,12 +154,12 @@ const Activation = ({ ...props }: ActivateProps) => {
             </>
         );
     }
-    
+
     return (
         <>
             <Helmet>
                 <meta charSet="utf-8" />
-                <title>Glycemic Indexer - Aktivasyon</title>
+                <title>Glycemic Indexer - Şifreni sıfırla</title>
             </Helmet>
             <NavbarComponent />
             {
@@ -124,10 +176,10 @@ const Activation = ({ ...props }: ActivateProps) => {
             }
             <FooterComponent />
         </>
-    );
+    )
 }
 const mapStateToProps = (state: any) => ({});
 
-const mapDispatchToProps = { setActivateAuth };
+const mapDispatchToProps = { validateResetPassParams };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Activation);
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPassword);

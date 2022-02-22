@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 
 import Action from '../../utils/action';
 import ActionTypes from '../../utils/types';
-import { ValidityStates, ActivationStates } from '../reducers/authReducer';
+import { ValidityStates, ActivityStates } from '../reducers/authReducer';
 
 const axios = Axios.create({
     baseURL:process.env.REACT_APP_BASE_URL,
@@ -169,19 +169,38 @@ export const setActivateAuth = (form:any) => (dispatch:Dispatch<Action>) =>{
     }).then(response => {
         const data = response.data;
 
-        if(data.status){
-            dispatch({type:ActionTypes.AUTH_ACTIVATION, payload:ActivationStates.OK});
-        }else{
-            dispatch({type:ActionTypes.AUTH_ACTIVATION, payload:data.result});
-        }
+
+        dispatch({type:ActionTypes.AUTH_ACTIVITY, payload:data.result});
         dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
+
     }).catch(error => {
-        dispatch({type:ActionTypes.AUTH_ACTIVATION, payload:ActivationStates.INVALID});
+        dispatch({type:ActionTypes.AUTH_ACTIVITY, payload:ActivityStates.INVALID});
         dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
     });
 }
 
-export const authForgetPassword = (email:string) => (dispatch:Dispatch<Action>) =>{
+export const validateResetPassParams = (form:any) => (dispatch:Dispatch<Action>) =>{
+    dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
+    axios.get("auth/reset_password",{
+        headers:{
+            Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
+        },
+        params:{
+            forgetKey:form.forgetKey,
+            email:form.email,
+        }
+    }).then(response=>{
+        const data = response.data;
+
+        dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
+        dispatch({type:ActionTypes.AUTH_ACTIVITY, payload:data.result});
+    }).catch(error=>{
+        dispatch({type:ActionTypes.AUTH_ACTIVITY, payload:ActivityStates.INVALID});
+        dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
+    });
+}
+
+export const authResetPassword = (email:string) => (dispatch:Dispatch<Action>) =>{
 }
 
 const clearStorage = () =>{

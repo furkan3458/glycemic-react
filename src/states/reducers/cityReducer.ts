@@ -28,7 +28,7 @@ const cityReducer = (state: cityState = initialState, action: action) => {
             }
 
         default:
-            return state
+            return state;
     }
 }
 

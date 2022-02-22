@@ -7,6 +7,7 @@ import listReducer, { listState } from './listReducer';
 import categoryReducer, { categoryState } from './categoryReducer';
 import searchReducer, { searchState } from './searchReducer';
 import cityReducer, { cityState } from './cityReducer';
+import mailReducer, { mailState } from './mailReducer';
 
 const reducers = combineReducers({
     auth:authReducer,
@@ -15,6 +16,7 @@ const reducers = combineReducers({
     category:categoryReducer,
     search:searchReducer,
     city:cityReducer,
+    mail:mailReducer,
 });
 
 interface RootState{
@@ -24,6 +26,7 @@ interface RootState{
     category:categoryState;
     search:searchState;
     city:cityState;
+    mail:mailState;
 }
 
 export default reducers;

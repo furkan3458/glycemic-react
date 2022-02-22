@@ -7,7 +7,7 @@ export enum ValidityStates {
     INVALID,
 }
 
-export enum ActivationStates{
+export enum ActivityStates{
     NULL,
     OK,
     ALREADY,
@@ -27,7 +27,7 @@ export interface authState {
     isValidate?: boolean;
     emailValidity?: authValidity;
     user?: object | null;
-    activation?: ActivationStates;
+    activity?: ActivityStates;
 }
 
 const initialize: authState = { 
@@ -40,7 +40,7 @@ const initialize: authState = {
         validateState: ValidityStates.IDLE
     }, 
     user: null,
-    activation: ActivationStates.NULL
+    activity: ActivityStates.NULL
 }
 
 const authReducer = (state: authState = initialize, action: action) => {
@@ -83,10 +83,10 @@ const authReducer = (state: authState = initialize, action: action) => {
                 ...state,
                 isValidate: action.payload,
             }
-        case ActionTypes.AUTH_ACTIVATION:
+        case ActionTypes.AUTH_ACTIVITY:
             return {
                 ...state,
-                activation: action.payload,
+                activity: action.payload,
             }
         default:
             return state;
