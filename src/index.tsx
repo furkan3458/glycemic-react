@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider, useSelector, connect } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
@@ -24,7 +24,6 @@ import ToastContext, { ToastContextProvider } from './contexts/ToastContext';
 
 import SpinnerComponent from './components/SpinnerComponent';
 
-
 const App: React.FC = ({ ...props }: any): JSX.Element => {
 
   const [authenticatedUser, setauthenticatedUser] = useState<AuthContextProvider>();
@@ -46,7 +45,7 @@ const App: React.FC = ({ ...props }: any): JSX.Element => {
       props.setList();
       props.getCategoryList();
       initToastContext();
-      initFingerPrint();
+      InitFingerPrint();
       //initSidebarContext();
     }
   }, []);
@@ -69,12 +68,12 @@ const App: React.FC = ({ ...props }: any): JSX.Element => {
     setToastContext(context);
   }
 
-  const initFingerPrint = () => {
+  const InitFingerPrint = () => {
     const fpPromise = FingerprintJS.load();
-
     (async () => {
-      const fp = await fpPromise
-      const result = await fp.get()
+       
+      const fp = await fpPromise;
+      const result = await fp.get();
       localStorage.setItem(process.env.REACT_APP_FINGERPRINT_NAME!,result.visitorId);
       setFingerPrintLoaded(true);
     })()

@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { connect, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Container, Grid, Header, Icon, Segment } from 'semantic-ui-react';
+import isEmpty from 'is-empty';
 
 import { StateType } from '../states/reducers';
 
@@ -17,7 +18,6 @@ import FoodListComponent from '../components/FoodListComponent';
 import PaginationComponent from '../components/PaginationComponent';
 
 import States from '../utils/states';
-import isEmpty from '../utils/isEmpty';
 
 interface MyIndexesProps {
   getUserFoodList?: Function;

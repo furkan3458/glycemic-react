@@ -25,6 +25,10 @@ export const setAuthReset = () => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.AUTH_RESET, payload:null});
 }
 
+export const setAuthActivityReset = (state:boolean) => (dispatch:Dispatch<Action>) => {
+    dispatch({type:ActionTypes.AUTH_ACTIVITY_RESET, payload:[]});
+}
+
 export const setDefaultValidateEmail = () => (dispatch:Dispatch<Action>) => {
     dispatch({type:ActionTypes.AUTH_VALIDATE_EMAIL, payload:{isValidating:false, validateState:ValidityStates.IDLE}});
 }
@@ -181,7 +185,7 @@ export const setActivateAuth = (form:any) => (dispatch:Dispatch<Action>) =>{
 
 export const validateResetPassParams = (form:any) => (dispatch:Dispatch<Action>) =>{
     dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
-    axios.get("auth/reset_password",{
+    axios.get("auth/validate_reset",{
         headers:{
             Fingerprint:localStorage.getItem(process.env.REACT_APP_FINGERPRINT_NAME!)!,
         },
@@ -200,7 +204,18 @@ export const validateResetPassParams = (form:any) => (dispatch:Dispatch<Action>)
     });
 }
 
-export const authResetPassword = (email:string) => (dispatch:Dispatch<Action>) =>{
+export const authResetPassword = (form:any) => (dispatch:Dispatch<Action>) =>{
+    dispatch({type:ActionTypes.AUTH_LOADING, payload:true});
+    axios.post("auth/reset_password",form).then(response=>{
+
+        const data = response.data;
+
+        dispatch({type:ActionTypes.AUTH_PASSWORD_RESULT, payload:data.result});
+        dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
+    }).catch(error=> {
+        dispatch({type:ActionTypes.AUTH_PASSWORD_RESULT, payload:ActivityStates.INVALID});
+        dispatch({type:ActionTypes.AUTH_LOADING, payload:false});
+    });
 }
 
 const clearStorage = () =>{
@@ -208,4 +223,3 @@ const clearStorage = () =>{
     localStorage.removeItem("session");
     localStorage.removeItem("remember-me");
 } 
-

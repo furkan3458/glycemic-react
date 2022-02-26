@@ -7,7 +7,7 @@ export enum ValidityStates {
     INVALID,
 }
 
-export enum ActivityStates{
+export enum ActivityStates {
     NULL,
     OK,
     ALREADY,
@@ -28,19 +28,21 @@ export interface authState {
     emailValidity?: authValidity;
     user?: object | null;
     activity?: ActivityStates;
+    passwordReset?: ActivityStates;
 }
 
-const initialize: authState = { 
-    isAuthenticated: false, 
-    isAuthFail: false, 
-    isLoading: false, 
-    isValidate: false, 
+const initialize: authState = {
+    isAuthenticated: false,
+    isAuthFail: false,
+    isLoading: false,
+    isValidate: false,
     emailValidity: {
         isValidating: false,
         validateState: ValidityStates.IDLE
-    }, 
+    },
     user: null,
-    activity: ActivityStates.NULL
+    activity: ActivityStates.NULL,
+    passwordReset: ActivityStates.NULL,
 }
 
 const authReducer = (state: authState = initialize, action: action) => {
@@ -60,7 +62,7 @@ const authReducer = (state: authState = initialize, action: action) => {
                 ...state,
                 isAuthFail: false,
                 isAuthenticated: false,
-                isValidate:false,
+                isValidate: false,
             }
         case ActionTypes.AUTH_FAIL:
             return {
@@ -87,6 +89,17 @@ const authReducer = (state: authState = initialize, action: action) => {
             return {
                 ...state,
                 activity: action.payload,
+            }
+        case ActionTypes.AUTH_PASSWORD_RESULT:
+            return {
+                ...state,
+                passwordReset: action.payload,
+            }
+        case ActionTypes.AUTH_ACTIVITY_RESET:
+            return{
+                ...state,
+                activity: ActivityStates.NULL,
+                passwordReset: ActivityStates.NULL,
             }
         default:
             return state;

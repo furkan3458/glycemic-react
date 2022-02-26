@@ -9,6 +9,7 @@
         "@testing-library/jest-dom": "^5.16.2",
         "@testing-library/react": "^12.1.2",
         "@testing-library/user-event": "^13.5.0",
+        "@types/is-empty": "^1.2.1",
         "@types/jest": "^27.4.0",
         "@types/jquery": "^3.5.13",
         "@types/node": "^16.11.22",
@@ -22,6 +23,8 @@
         "@types/redux-logger": "^3.0.9",
         "@types/redux-thunk": "^2.1.0",
         "axios": "^0.25.0",
+        "env-cmd": "^10.1.0",
+        "is-empty": "^1.2.0",
         "react": "^17.0.2",
         "react-cookie-consent": "^7.3.1",
         "react-dom": "^17.0.2",
@@ -40,8 +43,8 @@
         "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "dev": "react-scripts start",
-        "start": "serve -s build",
+        "dev": "env-cmd -f .env.development react-scripts start",
+        "start": "env-cmd -f .env serve -s build",
         "build": "CI=false GENERATE_SOURCEMAP=false react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

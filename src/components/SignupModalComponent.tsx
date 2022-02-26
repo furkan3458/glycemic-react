@@ -1,6 +1,7 @@
 import { useContext, useEffect,useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { Button, Divider, Form, Grid, Header, Icon, Message, Modal } from 'semantic-ui-react'
+import { Button, Divider, Form, Grid, Header, Icon, Message, Modal } from 'semantic-ui-react';
+import isEmpty from 'is-empty';
 
 import { validateEmail, authSignup } from '../states/actions/authActions';
 import { setCity } from '../states/actions/cityActions';
@@ -9,7 +10,6 @@ import { ValidityStates } from '../states/reducers/authReducer';
 import { StateType } from '../states/reducers';
 
 import ToastContext, { ToastContextProvider } from '../contexts/ToastContext';
-import isEmpty from '../utils/isEmpty';
 
 interface SignupProps {
     showModal: boolean;

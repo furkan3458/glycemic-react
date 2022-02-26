@@ -3,10 +3,9 @@ import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useMediaQuery } from 'react-responsive';
 import { Container, Grid, Header, Icon, Segment } from 'semantic-ui-react';
+import isEmpty from 'is-empty';
 
 import States from '../utils/states';
-
-import isEmpty from '../utils/isEmpty';
 
 import FooterComponent from '../components/FooterComponent';
 import NavbarComponent from '../components/NavbarComponent';
