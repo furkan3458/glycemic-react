@@ -2,7 +2,6 @@
 # Glisemik Indeks Web Uygulaması
 
 Yiyecek ve içeceklerin glisemik oranları,besin değerleri vb. detaylarına ulaşabileceğiniz ve paylaşabileceğiniz bir web sitesidir.
-Projeye https://glycemic-react.herokuapp.com/ adresinden ulaşıp göz atabilirsiniz.
 ## Kullanılan teknolojiler
 
 **Frontend:** ReactJS, React-Semantic UI,Redux, Axios
