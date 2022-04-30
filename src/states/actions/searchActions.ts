@@ -63,8 +63,10 @@ export const startSearch = (search:SearchInfo) => (dispatch:Dispatch<Action>) =>
             dispatch({type:ActionTypes.SEARCH_RESULT_CLEAR, payload:[]});
         }
         dispatch({type:ActionTypes.SEARCH_RESULTED, payload:true});
+        dispatch({type:ActionTypes.SEARCH_LOADING, payload:false});
     }).catch(error=> {
         dispatch({type:ActionTypes.SEARCH_RESULTED, payload:true});
+        dispatch({type:ActionTypes.SEARCH_LOADING, payload:false});
         console.log(error.response);
     });
 }

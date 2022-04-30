@@ -42,7 +42,6 @@ const searchReducer = (state: searchState = initialState, action: action) => {
             return {
                 ...state,
                 isResulted: action.payload,
-                isLoading:false
             }
         case ActionTypes.SEARCH_SET_CATEGORY: {
             state.info.category = action.payload;

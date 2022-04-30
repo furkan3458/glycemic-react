@@ -190,7 +190,7 @@ const ListItemComponent = ({ ...props }: ListItemComponentProps) => {
             <Divider></Divider>
             <Grid.Row style={{ flexWrap: 'wrap' }}>
                 <Grid.Column computer={4} mobile={6} tablet={3} textAlign="center">
-                    <CldImageComponent width={96} height={96} src={props.detail.image} wrapped={true} />
+                    <CldImageComponent width={128} height={128} src={props.detail.image} wrapped={true} />
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Button.Group size={isMobileOrTablet ? 'mini' : 'medium'}>
                             <Button icon="minus" onClick={() => onClickDecrease()}></Button>
